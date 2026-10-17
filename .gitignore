@@ -1,0 +1,23 @@
+# Secrets - never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.streamlit/secrets.toml
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local data (database, uploaded files)
+data/
+deploy.zip
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
