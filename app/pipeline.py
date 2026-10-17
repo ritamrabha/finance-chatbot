@@ -21,7 +21,7 @@ class ProcessResult:
     exact_file_duplicate: bool = False
 
 
-def process_upload(filename: str, data: bytes, user: str) -> ProcessResult:
+def process_upload(filename: str, data: bytes, user: str, force_local: bool = False) -> ProcessResult:
     check = validate_upload(filename, data)
     if not check.ok:
         log_event("upload_rejected", reason=check.reason, user=user)
@@ -36,7 +36,7 @@ def process_upload(filename: str, data: bytes, user: str) -> ProcessResult:
                              exact_file_duplicate=True)
 
     try:
-        inv = extract_invoice(data, check.safe_name)
+        inv = extract_invoice(data, check.safe_name, force_local=force_local)
     except ExtractionError as e:
         log_event("extraction_failed", reason=str(e), user=user)
         return ProcessResult(False, str(e))

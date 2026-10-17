@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import sqlite3
 import time
+from decimal import Decimal
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
@@ -118,6 +119,23 @@ def _now() -> str:
 # --------------------------------------------------------------------------
 # Connections
 # --------------------------------------------------------------------------
+def _odbc_connect(user: str, password: str, **kw):
+    """Connect to Azure SQL, retrying while a paused serverless database wakes up (~30-60 s)."""
+    import pyodbc
+    for attempt in range(4):
+        try:
+            return pyodbc.connect(_odbc_conn_str(user, password), **kw)
+        except pyodbc.Error:
+            if attempt == 3:
+                raise
+            time.sleep(10 * (attempt + 1))
+
+
+def _records(rows) -> list[tuple]:
+    """pyodbc returns Decimal for money columns; convert to float for pandas/maths."""
+    return [tuple(float(v) if isinstance(v, Decimal) else v for v in r) for r in rows]
+
+
 def _odbc_conn_str(user: str, password: str) -> str:
     return (
         "Driver={ODBC Driver 18 for SQL Server};"
@@ -130,8 +148,7 @@ def _odbc_conn_str(user: str, password: str) -> str:
 def writer():
     """Read-write connection for the app's own (parameterised) queries."""
     if settings.use_azure_sql:
-        import pyodbc
-        conn = pyodbc.connect(_odbc_conn_str(settings.sql_writer_user, settings.sql_writer_password))
+        conn = _odbc_connect(settings.sql_writer_user, settings.sql_writer_password)
     else:
         settings.sqlite_path.parent.mkdir(parents=True, exist_ok=True)
         conn = sqlite3.connect(settings.sqlite_path)
@@ -167,9 +184,7 @@ def _sqlite_readonly_authorizer(action, arg1, arg2, db_name, trigger):
 def reader():
     """READ-ONLY connection used by the chatbot."""
     if settings.use_azure_sql:
-        import pyodbc
-        conn = pyodbc.connect(_odbc_conn_str(settings.sql_reader_user, settings.sql_reader_password),
-                              readonly=True)
+        conn = _odbc_connect(settings.sql_reader_user, settings.sql_reader_password, readonly=True)
         conn.timeout = 10  # seconds per query
     else:
         uri = f"file:{settings.sqlite_path.as_posix()}?mode=ro"
@@ -192,7 +207,7 @@ def run_readonly_query(sql: str, max_rows: int = 500) -> pd.DataFrame:
         cur.execute(sql)
         cols = [d[0] for d in cur.description]
         rows = cur.fetchmany(max_rows)
-    return pd.DataFrame.from_records([tuple(r) for r in rows], columns=cols)
+    return pd.DataFrame.from_records(_records(rows), columns=cols)
 
 
 # --------------------------------------------------------------------------
@@ -289,7 +304,7 @@ def _df(sql: str, params: tuple = ()) -> pd.DataFrame:
         cur = conn.cursor()
         cur.execute(sql, params)
         cols = [d[0] for d in cur.description]
-        return pd.DataFrame.from_records([tuple(r) for r in cur.fetchall()], columns=cols)
+        return pd.DataFrame.from_records(_records(cur.fetchall()), columns=cols)
 
 
 def all_invoices() -> pd.DataFrame:

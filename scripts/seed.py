@@ -20,7 +20,9 @@ def main():
     files = sorted(SAMPLES.glob("*.pdf"))
     flagged = 0
     for f in files:
-        r = process_upload(f.name, f.read_bytes(), user="seed")
+        # Sample data is loaded with the offline extractor so seeding never uses Azure free-tier pages;
+        # live uploads in the app go through Azure Document Intelligence.
+        r = process_upload(f.name, f.read_bytes(), user="seed", force_local=True)
         mark = ""
         if r.duplicates:
             flagged += 1

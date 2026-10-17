@@ -26,8 +26,8 @@ class ExtractionError(Exception):
 REQUIRED = ("vendor_name", "invoice_number", "total", "currency")
 
 
-def extract_invoice(data: bytes, filename: str) -> dict:
-    if settings.use_docintel:
+def extract_invoice(data: bytes, filename: str, force_local: bool = False) -> dict:
+    if settings.use_docintel and not force_local:
         inv = _extract_azure(data)
     else:
         inv = _extract_local_demo(data, filename)
