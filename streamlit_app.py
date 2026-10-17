@@ -344,7 +344,7 @@ with tab_chat:
     if not settings.llm_configured:
         st.info("Set LLM_BASE_URL, LLM_MODEL and LLM_API_KEY to enable the chatbot.")
 
-    if not st.session_state.chat:
+    if not st.session_state.chat and "pending" not in st.session_state:
         st.markdown("##### Try asking")
         cols = st.columns(3)
         for i, sug in enumerate(SUGGESTIONS):
