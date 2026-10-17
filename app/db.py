@@ -28,7 +28,8 @@ CHAT_TABLES = ("invoices", "line_items", "duplicate_flags")
 SCHEMA_SQLITE = """
 CREATE TABLE IF NOT EXISTS invoices (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
-    vendor_name       TEXT NOT NULL,
+    vendor_name       TEXT NOT NULL,     -- as printed on the invoice
+    vendor_canonical  TEXT,              -- grouped name (spelling variants merged)
     invoice_number    TEXT NOT NULL,
     invoice_date      TEXT,              -- ISO 'YYYY-MM-DD'
     currency          TEXT NOT NULL,     -- 'INR' or 'GBP'
@@ -72,6 +73,7 @@ SCHEMA_TSQL = [
     """IF OBJECT_ID('dbo.invoices') IS NULL CREATE TABLE dbo.invoices (
         id INT IDENTITY(1,1) PRIMARY KEY,
         vendor_name NVARCHAR(200) NOT NULL,
+        vendor_canonical NVARCHAR(200) NULL,
         invoice_number NVARCHAR(100) NOT NULL,
         invoice_date DATE NULL,
         currency NVARCHAR(3) NOT NULL,
@@ -222,11 +224,11 @@ def insert_invoice(inv: dict, *, source_file: str, blob_path: str, file_sha256: 
     total_inr = round(float(inv["total"]) * FX_TO_INR.get(inv["currency"], 1.0), 2)
     with writer() as conn:
         inv_id = _insert(conn, """
-            INSERT INTO invoices (vendor_name, invoice_number, invoice_date, currency, subtotal, tax,
+            INSERT INTO invoices (vendor_name, vendor_canonical, invoice_number, invoice_date, currency, subtotal, tax,
                 total, total_inr, tax_type, status, source_file, blob_path, file_sha256,
                 extraction_method, confidence, uploaded_by, uploaded_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (inv["vendor_name"], inv["invoice_number"], inv.get("invoice_date"), inv["currency"],
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (inv["vendor_name"], inv.get("vendor_canonical") or inv["vendor_name"], inv["invoice_number"], inv.get("invoice_date"), inv["currency"],
              inv.get("subtotal"), inv.get("tax"), inv["total"], total_inr, inv.get("tax_type"),
              status, source_file, blob_path, file_sha256, extraction_method,
              inv.get("confidence"), uploaded_by, _now()))
@@ -298,6 +300,11 @@ def invoice_by_hash(sha: str) -> pd.DataFrame:
     return _df("SELECT id, vendor_name, invoice_number FROM invoices WHERE file_sha256 = ?", (sha,))
 
 
+def canonical_vendors() -> list[str]:
+    df = _df("SELECT DISTINCT vendor_canonical FROM invoices WHERE vendor_canonical IS NOT NULL")
+    return df["vendor_canonical"].tolist()
+
+
 def line_items_for(invoice_id: int) -> pd.DataFrame:
     return _df("SELECT description, quantity, unit_price, amount FROM line_items WHERE invoice_id = ?",
                (invoice_id,))
@@ -318,7 +325,7 @@ def duplicate_flags() -> pd.DataFrame:
 
 def stats() -> dict:
     df = _df("""SELECT COUNT(*) AS n, COALESCE(SUM(total_inr), 0) AS spend_inr,
-                       COUNT(DISTINCT vendor_name) AS vendors FROM invoices""")
+                       COUNT(DISTINCT vendor_canonical) AS vendors FROM invoices""")
     flags = _df("SELECT COUNT(*) AS n FROM duplicate_flags WHERE review_status = 'Open'")
     row = df.iloc[0]
     return dict(invoices=int(row["n"]), spend_inr=float(row["spend_inr"]),

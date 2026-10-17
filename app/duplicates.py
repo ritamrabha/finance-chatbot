@@ -19,6 +19,10 @@ Why these weights? Vendor + invoice number together identify an invoice
 (65%). The amount confirms it. The date gets the least weight because
 re-sent invoices often carry a new date.
 
+Business rule: same vendor + same invoice number is ALWAYS sent for review
+(at least "Possible duplicate") even if the amount changed - that is either
+a duplicate or a revised invoice, and a human should look either way.
+
 Key precision rule: if two invoice numbers have DIFFERENT digits (e.g.
 OSF/2026/07 vs OSF/2026/08), they are different invoices even if the text is
 95% alike. So the invoice-number score is capped at 0.5. This is what stops
@@ -140,6 +144,9 @@ def compare(inv_a: dict, inv_b: dict) -> MatchResult:
         "date": date_similarity(inv_a.get("invoice_date"), inv_b.get("invoice_date")),
     }
     score = sum(WEIGHTS[k] * parts[k] for k in WEIGHTS)
+    same_number_rule = v >= 0.90 and parts["invoice_number"] == 1.0
+    if same_number_rule:
+        score = max(score, POSSIBLE_THRESHOLD)
 
     reasons = []
     reasons.append("Same vendor" if v >= 0.97 else f"Vendor names {v:.0%} similar")
@@ -148,6 +155,8 @@ def compare(inv_a: dict, inv_b: dict) -> MatchResult:
             "" if inv_a["invoice_number"] == inv_b["invoice_number"] else " (different formatting)"))
     elif parts["invoice_number"] <= 0.5:
         reasons.append("Different invoice number")
+    if same_number_rule and parts["amount"] < 1.0:
+        reasons.append("Same vendor and invoice number but different amount - possible revised invoice")
     if parts["amount"] == 1.0:
         diff = abs((inv_a.get("total") or 0) - (inv_b.get("total") or 0))
         reasons.append("Same amount" if diff < 0.01 else f"Amount differs by only {diff:,.2f}")
@@ -164,6 +173,21 @@ def compare(inv_a: dict, inv_b: dict) -> MatchResult:
     else:
         label = "No match"
     return MatchResult(round(score, 4), label, {k: round(x, 3) for k, x in parts.items()}, reasons)
+
+
+VENDOR_MERGE_THRESHOLD = 0.90
+
+
+def resolve_vendor(name: str, known: list[str]) -> str:
+    """Map a vendor name to an existing vendor if it is the same business
+    spelled differently ("NorthBridge Consulting Limited" -> "Northbridge
+    Consulting Ltd"), so spend reports don't split one supplier in two."""
+    best, best_sim = None, 0.0
+    for k in known:
+        s = vendor_similarity(name, k)
+        if s > best_sim:
+            best, best_sim = k, s
+    return best if best is not None and best_sim >= VENDOR_MERGE_THRESHOLD else name
 
 
 def find_duplicates(new_inv: dict, existing: list[dict]) -> list[tuple[dict, MatchResult]]:

@@ -27,7 +27,8 @@ from app.telemetry import log_event
 
 SCHEMA_DOC = """
 Table invoices  (one row per invoice)
-  id INTEGER PK, vendor_name TEXT, invoice_number TEXT, invoice_date DATE,
+  id INTEGER PK, vendor_name TEXT (exactly as printed), vendor_canonical TEXT (vendor with spelling
+  variants merged; ALWAYS use this to filter or GROUP BY vendor), invoice_number TEXT, invoice_date DATE,
   currency TEXT ('INR' or 'GBP'), subtotal NUMBER, tax NUMBER, total NUMBER (in the invoice currency),
   total_inr NUMBER (total converted to Indian rupees; USE THIS to compare or add amounts across currencies),
   tax_type TEXT ('GST (IGST)', 'GST (CGST+SGST)', 'VAT'),
@@ -69,7 +70,7 @@ Rules:
     "cannot_answer": null}}
 - Only SELECT. Never write INSERT/UPDATE/DELETE/DROP or any other statement. No comments.
 - Only use the tables above. Give result columns friendly aliases (e.g. total_spend_inr).
-- Vendor names may be spelled differently; match them with LOWER(vendor_name) LIKE '%keyword%'.
+- Vendor names may be spelled differently; match them with LOWER(vendor_canonical) LIKE '%keyword%'.
 - When adding or comparing money across vendors or currencies, use total_inr. When showing a single
   invoice, show total and currency.
 - For "show me possible duplicates", join duplicate_flags to invoices twice (suspect and original)

@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from app import db
-from app.duplicates import find_duplicates
+from app.duplicates import find_duplicates, resolve_vendor
 from app.extraction import ExtractionError, extract_invoice
 from app.security import validate_upload
 from app.storage import save_file
@@ -44,6 +44,7 @@ def process_upload(filename: str, data: bytes, user: str) -> ProcessResult:
         log_event("extraction_error", error=type(e).__name__, user=user)
         return ProcessResult(False, f"Extraction service error ({type(e).__name__}). Please try again.")
 
+    inv["vendor_canonical"] = resolve_vendor(inv["vendor_name"], db.canonical_vendors())
     existing = db.all_invoices().to_dict("records")
     dups = find_duplicates(inv, existing)
     status = dups[0][1].label if dups else "Clean"
