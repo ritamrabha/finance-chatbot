@@ -1,0 +1,392 @@
+[
+  {
+    "file": "INV_001_ABC.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "ABC Traders Pvt Ltd",
+    "invoice_number": "ABC/2026/0464",
+    "date": "2026-04-23",
+    "total": 10808.8,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_002_ABC.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "ABC Traders Pvt Ltd",
+    "invoice_number": "ABC/2026/0499",
+    "date": "2026-09-02",
+    "total": 3068.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_003_ABC.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "ABC Traders Pvt Ltd",
+    "invoice_number": "ABC/2026/0536",
+    "date": "2026-07-17",
+    "total": 5380.8,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_004_Shree.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Shree Ganesh Logistics",
+    "invoice_number": "SGL-0177",
+    "date": "2026-04-02",
+    "total": 14750.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_005_Shree.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Shree Ganesh Logistics",
+    "invoice_number": "SGL-0197",
+    "date": "2026-05-10",
+    "total": 1062.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_006_Shree.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Shree Ganesh Logistics",
+    "invoice_number": "SGL-0205",
+    "date": "2026-07-07",
+    "total": 13275.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_007_Shree.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Shree Ganesh Logistics",
+    "invoice_number": "SGL-0230",
+    "date": "2026-09-02",
+    "total": 27140.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_008_Infosphere.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Infosphere IT Solutions Pvt Ltd",
+    "invoice_number": "ISIT/26-27/0149",
+    "date": "2026-05-02",
+    "total": 118000.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_009_Infosphere.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Infosphere IT Solutions Pvt Ltd",
+    "invoice_number": "ISIT/26-27/0170",
+    "date": "2026-09-08",
+    "total": 129210.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_010_Infosphere.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Infosphere IT Solutions Pvt Ltd",
+    "invoice_number": "ISIT/26-27/0177",
+    "date": "2026-04-12",
+    "total": 146910.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_011_Kaveri.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Kaveri Packaging Industries",
+    "invoice_number": "KPI/0496",
+    "date": "2026-04-26",
+    "total": 115640.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_012_Kaveri.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Kaveri Packaging Industries",
+    "invoice_number": "KPI/0522",
+    "date": "2026-05-12",
+    "total": 85400.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_013_Delhi.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Delhi Print House LLP",
+    "invoice_number": "DPH-0247",
+    "date": "2026-09-03",
+    "total": 27376.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_014_Delhi.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Delhi Print House LLP",
+    "invoice_number": "DPH-0267",
+    "date": "2026-09-11",
+    "total": 143075.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_015_Delhi.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Delhi Print House LLP",
+    "invoice_number": "DPH-0273",
+    "date": "2026-05-29",
+    "total": 21240.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_016_Thames.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Thames Office Supplies Ltd",
+    "invoice_number": "TOS-0234",
+    "date": "2026-04-17",
+    "total": 107.52,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_017_Thames.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Thames Office Supplies Ltd",
+    "invoice_number": "TOS-0268",
+    "date": "2026-07-11",
+    "total": 3156.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_018_Northbridge.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Northbridge Consulting Ltd",
+    "invoice_number": "NBC-2026-0209",
+    "date": "2026-08-16",
+    "total": 11280.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_019_Northbridge.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Northbridge Consulting Ltd",
+    "invoice_number": "NBC-2026-0235",
+    "date": "2026-05-27",
+    "total": 5280.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_020_Highland.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Highland Catering Co.",
+    "invoice_number": "HCC-0160",
+    "date": "2026-10-11",
+    "total": 117.6,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_021_Highland.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Highland Catering Co.",
+    "invoice_number": "HCC-0173",
+    "date": "2026-09-22",
+    "total": 510.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_022_Highland.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Highland Catering Co.",
+    "invoice_number": "HCC-0205",
+    "date": "2026-08-14",
+    "total": 1020.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_023_Om.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Om Sai Facility Services",
+    "invoice_number": "OSF/2026/06",
+    "date": "2026-06-05",
+    "total": 75520.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_024_Om.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Om Sai Facility Services",
+    "invoice_number": "OSF/2026/07",
+    "date": "2026-07-05",
+    "total": 75520.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_025_Om.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Om Sai Facility Services",
+    "invoice_number": "OSF/2026/08",
+    "date": "2026-08-05",
+    "total": 75520.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_026_Om.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Om Sai Facility Services",
+    "invoice_number": "OSF/2026/09",
+    "date": "2026-09-05",
+    "total": 75520.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_027_Bristol.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Bristol Cloud Hosting Ltd",
+    "invoice_number": "BCH20260701",
+    "date": "2026-07-05",
+    "total": 1500.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_028_Bristol.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Bristol Cloud Hosting Ltd",
+    "invoice_number": "BCH20260801",
+    "date": "2026-08-05",
+    "total": 1500.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_029_Bristol.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Bristol Cloud Hosting Ltd",
+    "invoice_number": "BCH20260901",
+    "date": "2026-09-05",
+    "total": 1500.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_030_ABC.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "ABC Traders Pvt Ltd",
+    "invoice_number": "ABC/2026/0547",
+    "date": "2026-10-03",
+    "total": 19175.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_031_Infosphere.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Infosphere IT Solutions Pvt Ltd",
+    "invoice_number": "ISIT/26-27/0188",
+    "date": "2026-10-07",
+    "total": 118000.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_032_Thames.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Thames Office Supplies Ltd",
+    "invoice_number": "TOS-0279",
+    "date": "2026-10-09",
+    "total": 1605.6,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_033_Shree.pdf",
+    "folder": "main",
+    "duplicate_of": null,
+    "vendor": "Shree Ganesh Logistics",
+    "invoice_number": "SGL-0241",
+    "date": "2026-10-14",
+    "total": 34102.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_034_ABC_resend.pdf",
+    "folder": "demo",
+    "duplicate_of": "INV_002_ABC.pdf",
+    "vendor": "A.B.C. Traders Private Limited",
+    "invoice_number": "ABC-2026-0499",
+    "date": "2026-09-04",
+    "total": 3068.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_035_INFO_resend.pdf",
+    "folder": "main",
+    "duplicate_of": "INV_008_Infosphere.pdf",
+    "vendor": "Infosphere IT Solutions Pvt Ltd",
+    "invoice_number": "ISIT/26-27/0149",
+    "date": "2026-05-02",
+    "total": 118001.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_036_TOS_resend.pdf",
+    "folder": "main",
+    "duplicate_of": "INV_016_Thames.pdf",
+    "vendor": "Thames Office Supplies",
+    "invoice_number": "TOS0234",
+    "date": "2026-04-17",
+    "total": 107.52,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_037_NBC_resend.pdf",
+    "folder": "main",
+    "duplicate_of": "INV_019_Northbridge.pdf",
+    "vendor": "NorthBridge Consulting Limited",
+    "invoice_number": "NBC-2026-0235",
+    "date": "2026-06-01",
+    "total": 5280.0,
+    "currency": "GBP"
+  },
+  {
+    "file": "INV_038_KAV_resend.pdf",
+    "folder": "main",
+    "duplicate_of": "INV_011_Kaveri.pdf",
+    "vendor": "Kaveri Packaging Inds.",
+    "invoice_number": "KPI/496",
+    "date": "2026-04-27",
+    "total": 115640.0,
+    "currency": "INR"
+  },
+  {
+    "file": "INV_NEW_Highland_Catering.pdf",
+    "folder": "demo",
+    "duplicate_of": null,
+    "vendor": "Highland Catering Co.",
+    "invoice_number": "HCC-0999",
+    "date": "2026-10-16",
+    "total": 621.6,
+    "currency": "GBP"
+  }
+]

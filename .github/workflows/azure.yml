@@ -21,24 +21,8 @@ jobs:
 
       - name: Install dependencies & Build Vue.js
         run: |
-          set +e
-          echo "=== Node & NPM ===" > build.log
-          node -v >> build.log 2>&1
-          npm -v >> build.log 2>&1
-          echo "=== NPM INSTALL ===" >> build.log
-          npm install >> build.log 2>&1
-          INSTALL_EXIT=$?
-          echo "npm install exit code: $INSTALL_EXIT" >> build.log
-          echo "=== NPM BUILD ===" >> build.log
-          npm run build >> build.log 2>&1
-          BUILD_EXIT=$?
-          echo "npm run build exit code: $BUILD_EXIT" >> build.log
-          echo "=== BUILD LOG SUMMARY ==="
-          cat build.log
-          python3 -c "c = open('build.log').read().replace('\n', '%0A'); print('::error title=DiagnosticLog::' + c[:3000])"
-          if [ $INSTALL_EXIT -ne 0 ] || [ $BUILD_EXIT -ne 0 ]; then
-            exit 1
-          fi
+          npm install
+          npm run build
           ls -la dist/
 
       - name: Prepare production package
