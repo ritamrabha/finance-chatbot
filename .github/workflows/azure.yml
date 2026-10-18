@@ -35,11 +35,7 @@ jobs:
           echo "npm run build exit code: $BUILD_EXIT" >> build.log
           echo "=== BUILD LOG SUMMARY ==="
           cat build.log
-          python3 -c "
-content = open('build.log').read()
-encoded = content.replace('\r', '').replace('\n', '%0A')
-print('::error title=DiagnosticLog::' + encoded[:4000])
-"
+          python3 -c "c = open('build.log').read().replace('\n', '%0A'); print('::error title=DiagnosticLog::' + c[:3000])"
           if [ $INSTALL_EXIT -ne 0 ] || [ $BUILD_EXIT -ne 0 ]; then
             exit 1
           fi
