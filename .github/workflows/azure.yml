@@ -18,26 +18,22 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'npm'
 
       - name: Install dependencies & Build Vue.js
         run: |
-          npm ci
+          npm install
           npm run build
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install Python dependencies
+      - name: Prepare production package
         run: |
-          pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          mkdir -p deploy_pkg
+          cp server.py deploy_pkg/
+          cp -r dist deploy_pkg/
+          ls -la deploy_pkg
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'finsight-ai-ritam'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: '.'
+          package: './deploy_pkg'
