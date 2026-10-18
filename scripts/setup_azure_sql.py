@@ -38,11 +38,13 @@ def q(pw: str) -> str:
 
 
 def main():
+    driver = "ODBC Driver 18 for SQL Server" if "ODBC Driver 18 for SQL Server" in pyodbc.drivers() else ("ODBC Driver 17 for SQL Server" if "ODBC Driver 17 for SQL Server" in pyodbc.drivers() else "SQL Server")
+    encrypt_opt = "yes" if "18" in driver or "17" in driver else "no"
     conn = pyodbc.connect(
-        "Driver={ODBC Driver 18 for SQL Server};"
+        f"Driver={{{driver}}};"
         f"Server=tcp:{env('AZURE_SQL_SERVER')},1433;Database={env('AZURE_SQL_DATABASE')};"
         f"Uid={env('AZURE_SQL_ADMIN_USER')};Pwd={env('AZURE_SQL_ADMIN_PASSWORD')};"
-        "Encrypt=yes;TrustServerCertificate=no;Connection Timeout=60;", autocommit=True)
+        f"Encrypt={encrypt_opt};TrustServerCertificate=yes;Connection Timeout=60;", autocommit=True)
     cur = conn.cursor()
 
     for stmt in SCHEMA_TSQL:

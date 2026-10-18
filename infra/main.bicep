@@ -207,8 +207,8 @@ resource web 'Microsoft.Web/sites@2023-12-01' = {
     keyVaultReferenceIdentity: 'SystemAssigned'
     siteConfig: {
       linuxFxVersion: 'PYTHON|3.11'
-      appCommandLine: 'python -m streamlit run streamlit_app.py --server.port 8000 --server.address 0.0.0.0'
-      webSocketsEnabled: true          // Streamlit needs WebSockets
+      appCommandLine: 'python server.py'
+      webSocketsEnabled: false
       alwaysOn: appServiceSku != 'F1'  // not available on the free tier
       minTlsVersion: '1.2'
       ftpsState: 'Disabled'

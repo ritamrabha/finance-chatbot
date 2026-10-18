@@ -16,6 +16,9 @@ param(
     [string]$LlmModel = "llama-3.3-70b-versatile"
 )
 $ErrorActionPreference = "Stop"
+if (Test-Path "C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin") {
+    $env:Path += ";C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin"
+}
 
 function Confirm-Step($msg) {
     $a = Read-Host "$msg  Continue? (y/n)"
@@ -73,10 +76,13 @@ $env:AZURE_SQL_WRITER_PASSWORD = $sqlWriterPw; $env:AZURE_SQL_READER_PASSWORD = 
 .\.venv\Scripts\python.exe scripts\setup_azure_sql.py
 Remove-Item Env:AZURE_SQL_ADMIN_PASSWORD, Env:AZURE_SQL_WRITER_PASSWORD, Env:AZURE_SQL_READER_PASSWORD
 
-Confirm-Step "STEP 4: upload the app code to App Service (free)."
-git archive -o deploy.zip HEAD      # only committed files: .env and data/ are never included
+Confirm-Step "STEP 4: build Vue.js frontend and upload code to App Service (free)."
+Write-Host "Building Vue.js production bundle..."
+npm run build
+Write-Host "Creating deployment archive with Vue.js frontend and server..."
+Compress-Archive -Path dist, server.py, app, requirements.txt, samples -DestinationPath deploy.zip -Force
 az webapp deploy -g $ResourceGroup -n $web --src-path deploy.zip --type zip -o none
-Remove-Item deploy.zip
+Remove-Item deploy.zip -Force
 
 Write-Host ""
 Write-Host "Done. Open: $($out.webAppUrl.value)"

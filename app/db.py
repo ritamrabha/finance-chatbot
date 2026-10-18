@@ -137,10 +137,14 @@ def _records(rows) -> list[tuple]:
 
 
 def _odbc_conn_str(user: str, password: str) -> str:
+    drivers = pyodbc.drivers() if hasattr(pyodbc, 'drivers') else []
+    driver = "ODBC Driver 18 for SQL Server" if "ODBC Driver 18 for SQL Server" in drivers else ("ODBC Driver 17 for SQL Server" if "ODBC Driver 17 for SQL Server" in drivers else "SQL Server")
+    encrypt = "yes" if ("18" in driver or "17" in driver) else "no"
+    trust = "no" if ("18" in driver or "17" in driver) else "yes"
     return (
-        "Driver={ODBC Driver 18 for SQL Server};"
+        f"Driver={{{driver}}};"
         f"Server=tcp:{settings.sql_server},1433;Database={settings.sql_database};"
-        f"Uid={user};Pwd={password};Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;"
+        f"Uid={user};Pwd={password};Encrypt={encrypt};TrustServerCertificate={trust};Connection Timeout=30;"
     )
 
 
