@@ -21,9 +21,6 @@ export default defineConfig(({ mode }) => {
           }
         }
       }
-    },
-    define: {
-      __GROQ_API_KEY__: JSON.stringify(groqApiKey)
     }
   };
 });

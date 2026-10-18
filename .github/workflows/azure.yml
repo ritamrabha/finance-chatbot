@@ -22,7 +22,9 @@ jobs:
       - name: Install dependencies & Build Vue.js
         run: |
           npm install
+          npm list vite
           npm run build
+          ls -la dist/
 
       - name: Prepare production package
         run: |

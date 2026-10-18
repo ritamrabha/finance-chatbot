@@ -1,7 +1,7 @@
 import { runSql } from './db.js';
 
-// Default key from Vite env / build define
-const DEFAULT_API_KEY = import.meta.env.VITE_GROQ_API_KEY || (typeof __GROQ_API_KEY__ !== 'undefined' ? __GROQ_API_KEY__ : '');
+// Default key is empty; Azure server.py automatically proxies and injects LLM_API_KEY server-side
+const DEFAULT_API_KEY = '';
 
 export const GROQ_MODELS = [
   {
@@ -122,9 +122,6 @@ If the result is empty, say no matching invoices were found. Do not mention SQL 
  */
 async function callGroqChat(messages, model, responseFormat = null) {
   const apiKey = getGroqApiKey();
-  if (!apiKey) {
-    throw new Error('Groq API Key is missing. Please set your Groq API key.');
-  }
 
   const payload = {
     model,
@@ -137,18 +134,26 @@ async function callGroqChat(messages, model, responseFormat = null) {
     payload.response_format = responseFormat;
   }
 
-  // Try proxy first (configured in vite.config.js), fallback to direct API
-  const endpoints = ['/api/groq/chat/completions', 'https://api.groq.com/openai/v1/chat/completions'];
+  // Try server proxy first (Azure server.py / Vite proxy handles key injection), fallback to direct API
+  const endpoints = ['/api/groq/chat/completions'];
+  if (apiKey) {
+    endpoints.push('https://api.groq.com/openai/v1/chat/completions');
+  }
+
   let lastError = null;
 
   for (const url of endpoints) {
     try {
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+      }
+
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
-        },
+        headers,
         body: JSON.stringify(payload)
       });
 
@@ -162,11 +167,10 @@ async function callGroqChat(messages, model, responseFormat = null) {
       return data;
     } catch (err) {
       lastError = err;
-      // If first endpoint failed, try the next
     }
   }
 
-  throw lastError || new Error('Failed to connect to Groq API');
+  throw lastError || new Error('Groq API Key is missing. Please set your Groq API key in the studio settings.');
 }
 
 /**
