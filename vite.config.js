@@ -11,14 +11,9 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       open: false,
       proxy: {
-        '/api/groq': {
-          target: 'https://api.groq.com/openai/v1',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/groq/, ''),
-          headers: {
-            Authorization: `Bearer ${groqApiKey}`,
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-          }
+        '/api': {
+          target: 'http://localhost:8000',
+          changeOrigin: true
         }
       }
     }

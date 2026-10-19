@@ -47,17 +47,84 @@
           <span>{{ duplicateCount }} Duplicates</span>
         </div>
 
+        <!-- User Profile Chip with Default Auth Indicator -->
+        <button class="user-profile-chip" @click="showUserModal = true" title="Authentication & Default Password Settings">
+          <span class="user-avatar-sm">👤</span>
+          <div class="user-chip-text">
+            <span class="user-name">{{ authState.user }}</span>
+            <span class="user-badge-role">CFO</span>
+          </div>
+          <span class="auth-lock-dot" title="Auto-authenticated with default password">✓</span>
+        </button>
+
         <!-- Reset Button -->
         <button class="btn btn-secondary btn-sm" @click="$emit('reset-demo')" title="Reset database to the 37 original sample invoices">
           <span>🔄 Reset Demo</span>
         </button>
       </div>
     </div>
+
+    <!-- User Auth & Default Password Modal -->
+    <div v-if="showUserModal" class="modal-overlay" @click.self="showUserModal = false">
+      <div class="auth-modal glass-panel">
+        <div class="modal-header">
+          <div class="header-left">
+            <span class="auth-icon">🔐</span>
+            <div>
+              <h3>Authentication & Access Control</h3>
+              <p class="text-dim text-xs">Default credentials are permanently configured for zero-friction access.</p>
+            </div>
+          </div>
+          <button class="modal-close-btn" @click="showUserModal = false">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="auth-status-card">
+            <div class="status-indicator">
+              <span class="status-pulse"></span>
+              <span class="status-title">Active Session: <strong>{{ authState.user }}</strong></span>
+            </div>
+            <p class="status-desc">
+              Password authentication is set to <strong>automatic</strong> using the default secret. You will never need to enter your password manually.
+            </p>
+          </div>
+
+          <div class="creds-box">
+            <div class="cred-row">
+              <span class="cred-label">Default Username:</span>
+              <code class="code-tag">{{ authState.defaultUser }}</code>
+            </div>
+            <div class="cred-row">
+              <span class="cred-label">Default Password:</span>
+              <code class="code-tag">{{ authState.defaultPassword }}</code>
+            </div>
+            <div class="cred-row">
+              <span class="cred-label">Role & Privileges:</span>
+              <span class="badge badge-clean">Full Access (CFO)</span>
+            </div>
+          </div>
+
+          <div class="auth-actions">
+            <button class="btn btn-primary w-full" @click="handleAutoLogin">
+              ✓ Log in as Default Admin (Instant)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { ref } from 'vue';
+import { authState, loginWithDefault } from '../services/auth.js';
+
+const showUserModal = ref(false);
+
+function handleAutoLogin() {
+  loginWithDefault();
+  showUserModal.value = false;
+}
 
 const props = defineProps({
   activeModel: {
@@ -260,6 +327,178 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
 .btn-sm {
   padding: 6px 14px;
   font-size: 0.8rem;
+}
+
+.user-profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-profile-chip:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.6);
+  transform: translateY(-1px);
+}
+
+.user-avatar-sm {
+  font-size: 1rem;
+}
+
+.user-chip-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #F8FAFC;
+}
+
+.user-badge-role {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38BDF8;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.auth-lock-dot {
+  color: #10B981;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.auth-modal {
+  width: 100%;
+  max-width: 480px;
+  background: #0F172A;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.auth-icon {
+  font-size: 1.8rem;
+}
+
+.modal-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.modal-close-btn:hover {
+  color: #FFFFFF;
+}
+
+.auth-status-card {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.status-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+}
+
+.status-title {
+  font-size: 0.9rem;
+  color: #F8FAFC;
+}
+
+.status-desc {
+  font-size: 0.8rem;
+  color: #94A3B8;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.creds-box {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cred-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.cred-label {
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 @media (max-width: 900px) {

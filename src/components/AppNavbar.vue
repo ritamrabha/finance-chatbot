@@ -40,7 +40,8 @@ import {
   AiChat02Icon,
   AddInvoiceIcon,
   FileSearchIcon,
-  CpuIcon
+  CpuIcon,
+  BankIcon
 } from '@hugeicons/core-free-icons';
 
 const props = defineProps({
@@ -90,6 +91,13 @@ const navTabs = computed(() => [
     icon: FileSearchIcon,
     badge: props.duplicateCount > 0 ? String(props.duplicateCount) : null,
     badgeClass: 'badge-alert'
+  },
+  {
+    id: 'kyc-vault',
+    name: 'KYC & CIBIL Vault',
+    icon: BankIcon,
+    badge: 'Azure SQL',
+    badgeClass: 'badge-clean'
   },
   {
     id: 'groq-studio',

@@ -74,6 +74,11 @@
           @updated="refreshData"
         />
 
+        <!-- Financial KYC & CIBIL Vault Tab -->
+        <KycVaultView
+          v-else-if="activeTab === 'kyc-vault'"
+        />
+
         <!-- Groq Cloud Studio Tab -->
         <GroqStudioView
           v-else-if="activeTab === 'groq-studio'"
@@ -100,6 +105,7 @@ import ChatbotView from './views/ChatbotView.vue';
 import UploadView from './views/UploadView.vue';
 import DuplicatesView from './views/DuplicatesView.vue';
 import GroqStudioView from './views/GroqStudioView.vue';
+import KycVaultView from './views/KycVaultView.vue';
 
 import { initDatabase, dbState, getInvoices, getAnalytics, resetToSampleData } from './services/db.js';
 import { GROQ_MODELS } from './services/groq.js';

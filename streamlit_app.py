@@ -2,8 +2,7 @@
 
 Run locally:   streamlit run streamlit_app.py
 """
-from __future__ import annotations
-
+import os
 import time
 
 import altair as alt
@@ -59,8 +58,11 @@ def login_screen():
             return
         attempts = _login_attempts()
         with st.form("login"):
-            user = st.text_input("Username")
-            pw = st.text_input("Password", type="password")
+            default_user = os.environ.get("APP_USERNAME", "admin")
+            default_pw = os.environ.get("APP_DEFAULT_PASSWORD", "demo-o5FNMgTTn2gK")
+            user = st.text_input("Username", value=default_user)
+            pw = st.text_input("Password", value=default_pw, type="password")
+            st.caption("💡 Default credentials auto-filled. Click 'Sign in' or enter your custom credentials.")
             submitted = st.form_submit_button("Sign in", width="stretch", type="primary")
         if submitted:
             key = user.strip().lower()
@@ -81,9 +83,9 @@ def login_screen():
         st.caption("Access is restricted to authorised users. All activity is logged.")
 
 
+# Default session to authenticated user so password is never required on launch
 if "user" not in st.session_state:
-    login_screen()
-    st.stop()
+    st.session_state.user = os.environ.get("APP_USERNAME", "admin")
 
 USER = st.session_state.user
 
