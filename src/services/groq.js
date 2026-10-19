@@ -27,22 +27,6 @@ export const GROQ_MODELS = [
     speed: '~450 t/s',
     context: '131K tokens',
     description: 'High performance instruction-following model by Alibaba Cloud.'
-  },
-  {
-    id: 'llama-3.3-70b-versatile',
-    name: 'Llama 3.3 70B Versatile',
-    badge: 'Meta Enterprise',
-    speed: '~280 t/s',
-    context: '131K tokens',
-    description: 'Enterprise grade versatile reasoning from Meta.'
-  },
-  {
-    id: 'llama-3.1-8b-instant',
-    name: 'Llama 3.1 8B Instant',
-    badge: 'Instant',
-    speed: '~560 t/s',
-    context: '131K tokens',
-    description: 'Lightweight instant response model for straightforward queries.'
   }
 ];
 
