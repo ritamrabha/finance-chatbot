@@ -57,6 +57,7 @@
           :active-model="activeModel"
           :prefilled-query="prefilledPrompt"
           @clear-prefilled="prefilledPrompt = ''"
+          @nav="activeTab = $event"
         />
 
         <!-- Profile & KYC Vault Tab (Requested by User) -->

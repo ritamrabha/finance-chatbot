@@ -157,6 +157,60 @@ async function callGroqChat(messages, model, responseFormat = null) {
   throw lastError || new Error('Groq API Key is missing. Please set your Groq API key in the studio settings.');
 }
 
+const ADVISOR_SYSTEM_PROMPT = `You are a Senior AI Financial Consultant and Credit Bureau Intelligence Specialist for an Indian enterprise and personal finance platform.
+You have comprehensive knowledge of:
+1. TransUnion CIBIL, Experian, Equifax, and CRIF High Mark credit bureau scoring (300 to 900), Credit Information Reports (CIR), PAN linkages, CIBIL grievance resolution, and score improvement protocols.
+2. Loan products: Personal loans, business working capital, MSME credit, home loans, loan against property (LAP), EMI calculation formulas, reducing balance vs flat rate.
+3. Corporate invoicing, GST (CGST/SGST/IGST), VAT, expenditure auditing, cash flow optimization, and vendor invoice duplicate detection.
+
+Rules for response:
+- Be helpful, clear, and professional.
+- Use clean formatting with markdown bolding, lists, or tables where appropriate.
+- Zero emojis. Use a sleek, minimalist corporate tone.
+- Format money in Indian Rupees (₹) with commas (e.g. ₹5,00,000).
+- If the user asks about checking their CIBIL score or evaluating credit eligibility, inform them that they can initiate the sequential TransUnion CIBIL evaluation right here in the chat by typing "check cibil" or asking for a CIBIL check, where you will collect their Full Name, PAN, Date of Birth, and Income sequentially.
+`;
+
+export async function askFinancialAdvisor(question, history = [], model = 'openai/gpt-oss-120b') {
+  const startTime = performance.now();
+  const advisorMessages = [
+    { role: 'system', content: ADVISOR_SYSTEM_PROMPT },
+    ...history.slice(-4).map(h => ({
+      role: h.role === 'user' ? 'user' : 'assistant',
+      content: h.text || h.content || ''
+    })).filter(m => m.content),
+    { role: 'user', content: question }
+  ];
+
+  try {
+    const resp = await callGroqChat(advisorMessages, model);
+    const text = resp.choices[0]?.message?.content?.trim() || 'I am ready to assist with your financial inquiries.';
+    const totalTime = Math.round(performance.now() - startTime);
+
+    return {
+      text,
+      sql: null,
+      rows: [],
+      columns: [],
+      chart: { type: 'none' },
+      executionTime: totalTime,
+      usage: resp.usage || {},
+      model
+    };
+  } catch (err) {
+    return {
+      text: `I am your AI Financial Assistant. You can ask me to run your TransUnion CIBIL credit score evaluation, calculate loan EMIs, or query your invoice database.`,
+      sql: null,
+      rows: [],
+      columns: [],
+      chart: { type: 'none' },
+      executionTime: Math.round(performance.now() - startTime),
+      usage: {},
+      model
+    };
+  }
+}
+
 /**
  * Main Question-Answering Pipeline
  */
@@ -194,16 +248,8 @@ export async function askFinanceAssistant(question, history = [], model = 'opena
   }
 
   if (sqlPlan.cannot_answer || !sqlPlan.sql) {
-    return {
-      text: sqlPlan.cannot_answer || 'I can only answer questions related to your invoices and expenditure data.',
-      sql: null,
-      rows: [],
-      columns: [],
-      chart: { type: 'none' },
-      executionTime: Math.round(performance.now() - startTime),
-      usage: groqUsage,
-      model
-    };
+    // Fallback to Financial Advisor response so the user NEVER receives a robotic refusal
+    return await askFinancialAdvisor(question, history, model);
   }
 
   // Step 2: Execute SQL on SQLite WebAssembly

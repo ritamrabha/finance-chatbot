@@ -236,7 +236,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { HugeiconsIcon } from '@hugeicons/vue';
 import {
   Calculator01Icon,
@@ -259,6 +259,21 @@ const rate = ref(10.5);
 const tenureValue = ref(3);
 const tenureUnit = ref('years');
 const showAllYears = ref(false);
+
+onMounted(() => {
+  try {
+    const saved = localStorage.getItem('cibil_selected_loan');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.principal) principal.value = data.principal;
+      if (data.rate) rate.value = data.rate;
+      if (data.tenure) tenureValue.value = data.tenure;
+      if (data.unit) tenureUnit.value = data.unit;
+      selectedPreset.value = 'cibil-custom';
+      localStorage.removeItem('cibil_selected_loan');
+    }
+  } catch (e) {}
+});
 
 function applyPreset(p) {
   selectedPreset.value = p.id;
