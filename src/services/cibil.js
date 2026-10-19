@@ -28,6 +28,56 @@ export function maskAadhaar(aadhaar) {
 }
 
 /**
+ * Calculate mock pre-approved loan amount data from PAN, Name, and DOB
+ */
+export function calculateEligibleLoan({ fullName, pan, dob }) {
+  const cleanPan = (pan || 'ABCDE1234F').trim().toUpperCase();
+  const cleanName = (fullName || 'Applicant').trim();
+  const cleanDob = (dob || '1995-04-12').trim();
+
+  // Deterministic seed based on PAN and DOB
+  let hash = 0;
+  const seed = cleanPan + cleanDob;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) % 10000;
+  }
+
+  // Realistic loan amount between ₹5,00,000 and ₹35,00,000
+  const base = 1500000;
+  const delta = ((hash % 30) - 5) * 50000;
+  const loanAmount = Math.max(500000, Math.min(3500000, base + delta));
+
+  // Determine CIBIL score & interest rate
+  const cibilScore = 720 + (hash % 140);
+  const interestRate = cibilScore >= 780 ? 8.5 : cibilScore >= 740 ? 9.5 : 10.5;
+  const tenureYears = 3;
+  const tenureMonths = tenureYears * 12;
+
+  // Monthly EMI
+  const monthlyRate = (interestRate / 100) / 12;
+  const emi = Math.round(
+    (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) /
+    (Math.pow(1 + monthlyRate, tenureMonths) - 1)
+  );
+
+  return {
+    fullName: cleanName,
+    pan: cleanPan,
+    panMasked: maskPan(cleanPan),
+    dob: cleanDob,
+    loanAmount,
+    loanAmountFormatted: '₹' + loanAmount.toLocaleString('en-IN'),
+    cibilScore,
+    cibilRating: cibilScore >= 780 ? 'Excellent' : 'Good',
+    interestRate: `${interestRate}% p.a.`,
+    tenure: `${tenureYears} Years (${tenureMonths} Mo)`,
+    tenureMonths,
+    monthlyEmi: '₹' + emi.toLocaleString('en-IN') + '/mo',
+    approvedAt: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+  };
+}
+
+/**
  * Generate a deterministic yet realistic TransUnion CIBIL report based on PAN and profile data
  */
 export function generateCibilReport({ fullName, pan, mobile, dob, employment, monthlyIncome }) {

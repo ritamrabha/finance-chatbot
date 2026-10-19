@@ -447,9 +447,14 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
 
 @media (max-width: 768px) {
   .app-header {
-    padding: 10px 14px;
+    padding: 8px 14px;
   }
-  .brand-subtitle, .model-selector-pill, .status-chip, .reset-text {
+  .brand-subtitle,
+  .model-selector-pill,
+  .status-chip,
+  .reset-text,
+  .duplicate-alert-chip,
+  .user-profile-chip {
     display: none;
   }
 }
