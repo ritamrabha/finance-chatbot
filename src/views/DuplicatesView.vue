@@ -46,10 +46,12 @@
 
           <div class="pair-actions" v-if="pair.review_status === 'Open'">
             <button class="btn btn-danger btn-sm" @click="handleResolve(pair.flag_id, 'Confirmed duplicate')">
-              🚫 Confirm Duplicate
+              <HugeiconsIcon :icon="Alert02Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+              <span>Confirm Duplicate</span>
             </button>
             <button class="btn btn-secondary btn-sm" @click="handleResolve(pair.flag_id, 'Not a duplicate')">
-              ✓ Mark as Clean
+              <HugeiconsIcon :icon="CheckmarkCircle01Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+              <span>Mark as Clean</span>
             </button>
           </div>
           <div v-else class="resolved-note">
@@ -90,7 +92,9 @@
 
           <!-- Score Breakdown Meter in Center -->
           <div class="audit-meter-box">
-            <div class="meter-icon">⚡</div>
+            <div class="meter-icon">
+              <HugeiconsIcon :icon="FileSearchIcon" :size="20" :stroke-width="1.8" color="#FFFFFF" />
+            </div>
             <div class="meter-score money-val">{{ (pair.score * 100).toFixed(0) }}%</div>
             <div class="meter-label">RapidFuzz Ratio</div>
             <div class="meter-reasons">
@@ -133,7 +137,7 @@
 
       <!-- Empty State -->
       <div v-if="filteredPairs.length === 0" class="empty-flags glass-panel">
-        <span class="empty-icon">🛡️</span>
+        <HugeiconsIcon :icon="ShieldCheckIcon" :size="28" :stroke-width="1.8" color="#FFFFFF" />
         <h3>No duplicate flags match this filter</h3>
         <p class="text-dim">All invoices are clean or no pairs have been flagged.</p>
       </div>
@@ -143,6 +147,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Alert02Icon,
+  CheckmarkCircle01Icon,
+  FileSearchIcon,
+  ShieldCheckIcon
+} from '@hugeicons/core-free-icons';
 import { getDuplicateFlagsWithDetails, updateFlagStatus } from '../services/db.js';
 
 const emit = defineEmits(['updated']);

@@ -4,12 +4,12 @@
     <div class="vault-header glass-panel">
       <div class="header-left">
         <div class="vault-avatar">
-          <span>🛡️</span>
+          <HugeiconsIcon :icon="ShieldCheckIcon" :size="22" :stroke-width="1.8" color="#FFFFFF" />
         </div>
         <div>
           <div class="title-badge-row">
             <h2 class="vault-title">Financial KYC & CIBIL Vault</h2>
-            <span class="badge badge-clean">Azure SQL Protected</span>
+            <span class="badge">Azure SQL Protected</span>
             <span class="badge badge-currency">UIDAI & DPDP Compliant</span>
           </div>
           <p class="vault-desc">
@@ -27,28 +27,36 @@
     <!-- Security & Compliance Bar -->
     <div class="compliance-bar glass-panel">
       <div class="comp-item">
-        <span class="comp-icon">🆔</span>
+        <div class="comp-icon-box">
+          <HugeiconsIcon :icon="ShieldCheckIcon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
+        </div>
         <div>
           <span class="comp-label">Aadhaar Act & UIDAI:</span>
           <span class="comp-val">Masked XXXXXXXX1234 + Salted Hash</span>
         </div>
       </div>
       <div class="comp-item">
-        <span class="comp-icon">📑</span>
+        <div class="comp-icon-box">
+          <HugeiconsIcon :icon="Invoice01Icon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
+        </div>
         <div>
           <span class="comp-label">PAN Storage:</span>
           <span class="comp-val">AES-256 Encrypted (Masked View)</span>
         </div>
       </div>
       <div class="comp-item">
-        <span class="comp-icon">📈</span>
+        <div class="comp-icon-box">
+          <HugeiconsIcon :icon="DashboardSquare01Icon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
+        </div>
         <div>
           <span class="comp-label">CIBIL Bureau Score:</span>
           <span class="comp-val">300 - 900 Range with RLS Access</span>
         </div>
       </div>
       <div class="comp-item">
-        <span class="comp-icon">🏦</span>
+        <div class="comp-icon-box">
+          <HugeiconsIcon :icon="BankIcon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
+        </div>
         <div>
           <span class="comp-label">Bank Accounts:</span>
           <span class="comp-val">Masked Number + Validated IFSC</span>
@@ -67,14 +75,16 @@
         <div v-for="item in profiles" :key="item.id" class="profile-card glass-panel">
           <div class="card-head">
             <div class="user-info">
-              <span class="avatar-icon">👤</span>
+              <span class="avatar-icon">
+                <HugeiconsIcon :icon="User02Icon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
+              </span>
               <div>
                 <h4 class="user-fullname">{{ item.full_name }}</h4>
                 <span class="code-tag text-xs">{{ item.id }}</span>
               </div>
             </div>
             <!-- CIBIL Badge -->
-            <div class="cibil-badge" :class="getCibilClass(item.cibil_score)">
+            <div class="cibil-badge">
               <span class="cibil-score-val">{{ item.cibil_score }}</span>
               <span class="cibil-sub">CIBIL · {{ item.cibil_rating }}</span>
             </div>
@@ -100,12 +110,12 @@
             </div>
             <div class="spec-row">
               <span class="spec-label">IFSC Code:</span>
-              <span class="spec-val text-cyan font-mono">{{ item.bank_ifsc }}</span>
+              <span class="spec-val font-mono">{{ item.bank_ifsc }}</span>
             </div>
           </div>
 
           <div class="card-footer">
-            <span class="security-chip">🔒 AES-256 Protected</span>
+            <span class="security-chip">AES-256 Protected</span>
             <span class="date-text">{{ formatDate(item.created_at) }}</span>
           </div>
         </div>
@@ -117,7 +127,9 @@
       <div class="modal-box glass-panel">
         <div class="modal-header">
           <div class="header-left">
-            <span class="modal-title-icon">📝</span>
+            <div class="modal-title-icon-box">
+              <HugeiconsIcon :icon="Invoice01Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+            </div>
             <div>
               <h3>Add New Financial Profile</h3>
               <p class="text-dim text-xs">Data will be encrypted and stored in compliance with Indian banking laws.</p>
@@ -170,7 +182,8 @@
 
           <div class="form-actions">
             <button type="submit" class="btn btn-primary" :disabled="submitting">
-              <span>{{ submitting ? 'Encrypting & Saving...' : '✓ Save to Azure SQL Ledger' }}</span>
+              <HugeiconsIcon :icon="CheckmarkCircle01Icon" :size="16" :stroke-width="2" color="#000000" />
+              <span>{{ submitting ? 'Encrypting & Saving...' : 'Save to Azure SQL Ledger' }}</span>
             </button>
             <button type="button" class="btn btn-secondary" @click="showAddModal = false">
               Cancel
@@ -184,6 +197,15 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  ShieldCheckIcon,
+  Invoice01Icon,
+  DashboardSquare01Icon,
+  BankIcon,
+  User02Icon,
+  CheckmarkCircle01Icon
+} from '@hugeicons/core-free-icons';
 
 const profiles = ref([]);
 const showAddModal = ref(false);

@@ -14,7 +14,7 @@
     <div class="samples-panel glass-panel">
       <div class="panel-header">
         <div>
-          <h3 class="panel-title">⚡ Quick Demo Samples (Click to simulate scan)</h3>
+          <h3 class="panel-title">Demo Invoice Samples (Click to simulate scan)</h3>
           <p class="panel-desc">Test real sample PDFs, including planted duplicates and recurring bills</p>
         </div>
       </div>
@@ -30,7 +30,7 @@
           <div class="sample-badge-row">
             <span class="sample-file">{{ s.file }}</span>
             <span v-if="s.isPlantedDuplicate" class="badge badge-likely">Duplicate Test</span>
-            <span v-else class="badge badge-clean">Original</span>
+            <span v-else class="badge">Original</span>
           </div>
           <div class="sample-vendor">{{ s.vendor }}</div>
           <div class="sample-meta">
@@ -60,7 +60,9 @@
           class="hidden-file-input"
           @change="handleFileSelect"
         />
-        <div class="drop-icon">📄</div>
+        <div class="drop-icon-box">
+          <HugeiconsIcon :icon="Invoice01Icon" :size="32" :stroke-width="1.8" color="#FFFFFF" />
+        </div>
         <h4 class="drop-title">Drop invoice file here (PDF or image)</h4>
         <p class="drop-subtitle">or select a sample above for instantaneous testing</p>
         <button class="btn btn-secondary btn-sm" @click="$refs.fileInput.click()">
@@ -76,7 +78,7 @@
         <div class="panel-header">
           <div class="ext-header-left">
             <h3 class="panel-title">Extracted Document Data</h3>
-            <span class="badge badge-clean">Confidence {{ (currentExtraction.confidence * 100).toFixed(0) }}%</span>
+            <span class="badge">Confidence {{ (currentExtraction.confidence * 100).toFixed(0) }}%</span>
           </div>
           <span class="code-tag">{{ currentExtraction.source_file }}</span>
         </div>
@@ -85,7 +87,7 @@
         <div class="fields-grid">
           <div class="field-item">
             <span class="field-label">Vendor Name:</span>
-            <span class="field-val font-semibold">{{ currentExtraction.vendor_name }}</span>
+            <span class="field-val font-semibold text-white">{{ currentExtraction.vendor_name }}</span>
           </div>
           <div class="field-item">
             <span class="field-label">Invoice Number:</span>
@@ -114,7 +116,14 @@
         <!-- Live Duplicate Check Banner -->
         <div class="dup-evaluation" :class="dupResult?.isFlagged ? 'dup-warning' : 'dup-safe'">
           <div class="dup-eval-header">
-            <span class="eval-icon">{{ dupResult?.isFlagged ? '🚨' : '🛡️' }}</span>
+            <div class="eval-icon-box">
+              <HugeiconsIcon
+                :icon="dupResult?.isFlagged ? Alert02Icon : ShieldCheckIcon"
+                :size="20"
+                :stroke-width="1.8"
+                color="#FFFFFF"
+              />
+            </div>
             <div class="eval-title-wrap">
               <h4 class="eval-title">
                 {{ dupResult?.isFlagged ? `Flagged: ${dupResult.label}` : 'Safe to Pay: Clean Invoice' }}
@@ -143,7 +152,8 @@
             :class="{ 'btn-danger': dupResult?.isFlagged }"
             @click="commitInvoice"
           >
-            <span>{{ dupResult?.isFlagged ? 'Flag & Save for Human Audit' : '✓ Save to Approved Ledger' }}</span>
+            <HugeiconsIcon :icon="CheckmarkCircle01Icon" :size="16" :stroke-width="2" :color="dupResult?.isFlagged ? '#FFFFFF' : '#000000'" />
+            <span>{{ dupResult?.isFlagged ? 'Flag & Save for Human Audit' : 'Save to Approved Ledger' }}</span>
           </button>
           <button class="btn btn-secondary" @click="currentExtraction = null">
             Discard
@@ -156,6 +166,13 @@
 
 <script setup>
 import { ref } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Invoice01Icon,
+  Alert02Icon,
+  ShieldCheckIcon,
+  CheckmarkCircle01Icon
+} from '@hugeicons/core-free-icons';
 import { getSampleInvoices, generateExtractionFromSample } from '../services/sampleFiles.js';
 import { compareInvoices } from '../services/duplicates.js';
 import { addInvoice } from '../services/db.js';

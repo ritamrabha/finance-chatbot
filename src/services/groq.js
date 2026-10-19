@@ -1,16 +1,16 @@
 import { runSql } from './db.js';
 
-// Default key is empty; Azure server.py automatically proxies and injects LLM_API_KEY server-side
-const DEFAULT_API_KEY = '';
+// Groq API key loaded from environment / .env
+const DEFAULT_API_KEY = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GROQ_API_KEY) || '';
 
 export const GROQ_MODELS = [
   {
     id: 'openai/gpt-oss-120b',
     name: 'OpenAI GPT-OSS 120B',
-    badge: 'Flagship · Recommended',
+    badge: 'Recommended',
     speed: '~500 t/s',
     context: '131K tokens',
-    description: 'Flagship 120B model with deep reasoning and code execution capabilities.'
+    description: 'Flagship 120B model with deep financial reasoning and precision analytics.'
   },
   {
     id: 'openai/gpt-oss-20b',
@@ -47,7 +47,7 @@ export const GROQ_MODELS = [
 ];
 
 export function getGroqApiKey() {
-  return localStorage.getItem('finance_groq_api_key') || DEFAULT_API_KEY;
+  return localStorage.getItem('finance_groq_api_key') || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GROQ_API_KEY) || DEFAULT_API_KEY;
 }
 
 export function setGroqApiKey(key) {

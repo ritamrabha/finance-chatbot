@@ -4,7 +4,7 @@
     <div class="filter-bar glass-panel">
       <!-- Search Input -->
       <div class="search-wrap">
-        <span class="search-icon">🔍</span>
+        <HugeiconsIcon :icon="Search01Icon" :size="16" :stroke-width="1.8" color="#71717A" />
         <input
           v-model="searchQuery"
           type="text"
@@ -40,7 +40,8 @@
 
         <!-- Export CSV Button -->
         <button class="btn btn-secondary btn-sm" @click="exportCsv">
-          <span>📥 Export CSV</span>
+          <HugeiconsIcon :icon="Download01Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+          <span>Export CSV</span>
         </button>
       </div>
     </div>
@@ -158,7 +159,7 @@
           <!-- Duplicate Alert Warning if present -->
           <div v-if="selectedInvoice.flags && selectedInvoice.flags.length > 0" class="modal-duplicate-box">
             <div class="dup-box-header">
-              <span class="dup-box-icon">⚠️</span>
+              <HugeiconsIcon :icon="Alert02Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
               <h4>Duplicate Detection Alert</h4>
               <span class="badge badge-likely">{{ selectedInvoice.flags[0].label }} ({{ (selectedInvoice.flags[0].score * 100).toFixed(0) }}% match)</span>
             </div>
@@ -199,7 +200,8 @@
           <!-- Actions -->
           <div class="modal-actions">
             <button class="btn btn-primary" @click="askGroqAboutInvoice">
-              ✨ Ask Groq AI about this Vendor
+              <HugeiconsIcon :icon="AiChat02Icon" :size="16" :stroke-width="1.8" color="#000000" />
+              <span>Ask Groq AI about this Vendor</span>
             </button>
             <button class="btn btn-secondary" @click="selectedInvoice = null">
               Close
@@ -213,6 +215,13 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Search01Icon,
+  Download01Icon,
+  Alert02Icon,
+  AiChat02Icon
+} from '@hugeicons/core-free-icons';
 import { getInvoiceById } from '../services/db.js';
 
 const props = defineProps({

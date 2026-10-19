@@ -4,17 +4,28 @@
       <!-- Left Column: Specs & Security -->
       <div class="footer-col">
         <div class="footer-brand">
-          <span class="footer-logo">🧾</span>
+          <div class="footer-logo">
+            <HugeiconsIcon :icon="Invoice01Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+          </div>
           <span class="footer-title">FinSight AI</span>
-          <span class="badge badge-clean">Audit-Grade Security</span>
+          <span class="badge">Audit-Grade</span>
         </div>
         <p class="footer-desc">
-          Automated multi-factor invoice auditing, RapidFuzz duplicate prevention, and zero-compromise read-only SQL querying with Groq LLM intelligence.
+          Automated multi-factor invoice auditing, duplicate detection, and read-only financial intelligence powered by Groq LPU engine.
         </p>
         <div class="security-pills">
-          <span class="sec-pill">🔒 SELECT-Only Guard</span>
-          <span class="sec-pill">⚡ SQLite WebAssembly</span>
-          <span class="sec-pill">🚀 Groq LPU™ Engine</span>
+          <span class="sec-pill">
+            <HugeiconsIcon :icon="ShieldCheckIcon" :size="13" :stroke-width="1.8" color="#FFFFFF" />
+            <span>Read-Only Guard</span>
+          </span>
+          <span class="sec-pill">
+            <HugeiconsIcon :icon="DatabaseIcon" :size="13" :stroke-width="1.8" color="#FFFFFF" />
+            <span>SQLite Wasm</span>
+          </span>
+          <span class="sec-pill">
+            <HugeiconsIcon :icon="CpuIcon" :size="13" :stroke-width="1.8" color="#FFFFFF" />
+            <span>Groq LPU Speed</span>
+          </span>
         </div>
       </div>
 
@@ -27,7 +38,7 @@
             <span class="sig-weight">35%</span>
           </div>
           <div class="signal-row">
-            <span class="sig-name">Invoice Number & Digit Discrepancy</span>
+            <span class="sig-name">Invoice Number Discrepancy</span>
             <span class="sig-weight">30%</span>
           </div>
           <div class="signal-row">
@@ -66,7 +77,7 @@
     <!-- Bottom Bar -->
     <div class="footer-bottom">
       <div class="bottom-container">
-        <span>© 2026 AI Invoice Assistant & Finance Intelligence · Enterprise Edition</span>
+        <span>© 2026 FinSight AI · Enterprise Minimalist Edition</span>
         <span class="text-dim">All queries are strictly sandboxed and executed in read-only mode</span>
       </div>
     </div>
@@ -74,6 +85,14 @@
 </template>
 
 <script setup>
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Invoice01Icon,
+  ShieldCheckIcon,
+  DatabaseIcon,
+  CpuIcon
+} from '@hugeicons/core-free-icons';
+
 defineProps({
   activeModel: {
     type: String,
@@ -84,8 +103,8 @@ defineProps({
 
 <style scoped>
 .app-footer {
-  margin-top: 60px;
-  background: #060911;
+  margin-top: 40px;
+  background: #000000;
   border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-size: 0.85rem;
@@ -94,10 +113,10 @@ defineProps({
 .footer-container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 40px 24px;
+  padding: 36px 24px;
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 40px;
+  gap: 36px;
 }
 
 .footer-brand {
@@ -108,50 +127,61 @@ defineProps({
 }
 
 .footer-logo {
-  font-size: 1.3rem;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs);
+  background: #141414;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-title {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: #FFFFFF;
 }
 
 .footer-desc {
   color: var(--text-dim);
-  font-size: 0.82rem;
-  line-height: 1.6;
-  margin-bottom: 16px;
-  max-width: 440px;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-bottom: 14px;
+  max-width: 420px;
 }
 
 .security-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .sec-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 0.75rem;
-  padding: 3px 10px;
-  background: rgba(255, 255, 255, 0.04);
+  padding: 4px 10px;
+  background: #0E0E0E;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  color: #CBD5E1;
+  color: var(--text-muted);
 }
 
 .col-title {
   color: #FFFFFF;
-  font-size: 0.9rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-  letter-spacing: -0.01em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .signal-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .signal-row {
@@ -164,19 +194,19 @@ defineProps({
 }
 
 .sig-name {
-  color: var(--text-muted);
+  color: var(--text-dim);
 }
 
 .sig-weight {
   font-family: var(--font-mono);
   font-weight: 600;
-  color: #38BDF8;
+  color: #FFFFFF;
 }
 
 .sys-item {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   margin-bottom: 10px;
   font-size: 0.8rem;
 }
@@ -186,14 +216,14 @@ defineProps({
 }
 
 .sys-val {
-  color: #E2E8F0;
+  color: #FFFFFF;
   font-weight: 500;
 }
 
 .footer-bottom {
   border-top: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 16px 24px;
-  font-size: 0.78rem;
+  padding: 14px 24px;
+  font-size: 0.75rem;
 }
 
 .bottom-container {
@@ -209,7 +239,7 @@ defineProps({
 @media (max-width: 900px) {
   .footer-container {
     grid-template-columns: 1fr;
-    gap: 30px;
+    gap: 24px;
   }
 }
 </style>

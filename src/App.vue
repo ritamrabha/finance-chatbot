@@ -11,7 +11,7 @@
       @nav="activeTab = $event"
     />
 
-    <!-- Navigation Bar with Hugeicons -->
+    <!-- Navigation Bar for Desktop with Hugeicons -->
     <AppNavbar
       :current-tab="activeTab"
       :invoices-count="dbState.invoicesCount"
@@ -27,7 +27,7 @@
       </div>
 
       <div v-else-if="dbState.error" class="db-error-state glass-panel">
-        <span class="error-icon">⚠️</span>
+        <HugeiconsIcon :icon="Alert02Icon" :size="24" :stroke-width="1.8" color="#FFFFFF" />
         <div>
           <h3>Database Initialization Error</h3>
           <p>{{ dbState.error }}</p>
@@ -35,7 +35,7 @@
       </div>
 
       <div v-else class="tab-content-wrapper">
-        <!-- Dashboard Tab -->
+        <!-- Home / Dashboard Tab -->
         <DashboardView
           v-if="activeTab === 'dashboard'"
           :analytics="analyticsData"
@@ -45,10 +45,9 @@
           @view-invoice="handleViewInvoice"
         />
 
-        <!-- Invoices & Review Tab -->
-        <InvoicesView
-          v-else-if="activeTab === 'invoices'"
-          :all-invoices="allInvoices"
+        <!-- Loan Calculator Tab (Requested by User) -->
+        <LoanCalculatorView
+          v-else-if="activeTab === 'calculator'"
           @ask-query="handleTriggerPrompt"
         />
 
@@ -58,6 +57,18 @@
           :active-model="activeModel"
           :prefilled-query="prefilledPrompt"
           @clear-prefilled="prefilledPrompt = ''"
+        />
+
+        <!-- Profile & KYC Vault Tab (Requested by User) -->
+        <ProfileView
+          v-else-if="activeTab === 'profile' || activeTab === 'kyc-vault'"
+        />
+
+        <!-- Invoices & Review Tab -->
+        <InvoicesView
+          v-else-if="activeTab === 'invoices'"
+          :all-invoices="allInvoices"
+          @ask-query="handleTriggerPrompt"
         />
 
         <!-- Upload & Scan Tab -->
@@ -74,11 +85,6 @@
           @updated="refreshData"
         />
 
-        <!-- Financial KYC & CIBIL Vault Tab -->
-        <KycVaultView
-          v-else-if="activeTab === 'kyc-vault'"
-        />
-
         <!-- Groq Cloud Studio Tab -->
         <GroqStudioView
           v-else-if="activeTab === 'groq-studio'"
@@ -88,6 +94,12 @@
       </div>
     </main>
 
+    <!-- Floating Mobile Bottom Navigation Dock (Matching user reference screenshot) -->
+    <MobileDock
+      :current-tab="activeTab"
+      @select-tab="activeTab = $event"
+    />
+
     <!-- Footer -->
     <AppFooter :active-model="activeModel" />
   </div>
@@ -95,17 +107,22 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import { Alert02Icon } from '@hugeicons/core-free-icons';
+
 import AppHeader from './components/AppHeader.vue';
 import AppNavbar from './components/AppNavbar.vue';
 import AppFooter from './components/AppFooter.vue';
+import MobileDock from './components/MobileDock.vue';
 
 import DashboardView from './views/DashboardView.vue';
+import LoanCalculatorView from './views/LoanCalculatorView.vue';
 import InvoicesView from './views/InvoicesView.vue';
 import ChatbotView from './views/ChatbotView.vue';
 import UploadView from './views/UploadView.vue';
 import DuplicatesView from './views/DuplicatesView.vue';
 import GroqStudioView from './views/GroqStudioView.vue';
-import KycVaultView from './views/KycVaultView.vue';
+import ProfileView from './views/ProfileView.vue';
 
 import { initDatabase, dbState, getInvoices, getAnalytics, resetToSampleData } from './services/db.js';
 import { GROQ_MODELS } from './services/groq.js';
@@ -145,7 +162,7 @@ function handleTriggerPrompt(promptText) {
   activeTab.value = 'chat';
 }
 
-function handleViewInvoice(id) {
+function handleViewInvoice() {
   activeTab.value = 'invoices';
 }
 </script>
@@ -155,6 +172,7 @@ function handleViewInvoice(id) {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
 .main-content {
@@ -163,6 +181,7 @@ function handleViewInvoice(id) {
   width: 100%;
   margin: 0 auto;
   padding: 24px;
+  padding-bottom: 96px; /* Allow clearance for floating mobile dock */
 }
 
 .db-loading-state, .db-error-state {
@@ -170,35 +189,31 @@ function handleViewInvoice(id) {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 40px;
+  padding: 36px;
   margin: 40px auto;
-  max-width: 600px;
+  max-width: 560px;
   text-align: center;
-  font-size: 0.95rem;
-  color: #38BDF8;
+  font-size: 0.9rem;
+  color: var(--text-muted);
 }
 
 .db-error-state {
-  color: #FDA4AF;
-  border-color: rgba(244, 63, 94, 0.4);
-}
-
-.error-icon {
-  font-size: 1.8rem;
+  color: #FFFFFF;
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .tab-content-wrapper {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: fadeIn 0.2s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
   .main-content {
-    padding: 16px 12px;
+    padding: 16px 12px 108px 12px;
   }
 }
 </style>

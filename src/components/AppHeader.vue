@@ -2,24 +2,23 @@
   <header class="app-header">
     <div class="header-container">
       <!-- Brand & Title -->
-      <div class="brand-group">
+      <div class="brand-group" @click="$emit('nav', 'dashboard')">
         <div class="brand-logo">
-          <span class="logo-icon">🧾</span>
-          <div class="logo-glow"></div>
+          <HugeiconsIcon :icon="Invoice01Icon" :size="20" :stroke-width="1.8" color="#FFFFFF" />
         </div>
         <div class="brand-text">
           <div class="title-row">
-            <h1 class="brand-title">FinSight <span class="gradient-text">AI</span></h1>
-            <span class="brand-badge">Enterprise Edition</span>
+            <h1 class="brand-title">FinSight AI</h1>
+            <span class="brand-badge">Enterprise</span>
           </div>
-          <p class="brand-subtitle">Invoice Intelligence & Duplicate Auditor · Powered by Groq Cloud</p>
+          <p class="brand-subtitle">Invoice Intelligence & Financial Suite · Groq Cloud</p>
         </div>
       </div>
 
       <!-- Center / Model Selector -->
       <div class="model-selector-pill">
         <div class="model-label">
-          <span class="pulse-dot"></span>
+          <HugeiconsIcon :icon="CpuIcon" :size="15" :stroke-width="1.8" color="#FFFFFF" />
           <span class="groq-tag">Groq AI</span>
         </div>
         <select
@@ -36,30 +35,31 @@
       <!-- Right Header Actions -->
       <div class="header-actions">
         <!-- DB Status -->
-        <div class="status-chip" title="SQLite in-memory WebAssembly">
+        <div class="status-chip" title="SQLite WebAssembly Active">
           <span class="chip-dot"></span>
           <span class="chip-text">{{ invoicesCount }} Invoices</span>
         </div>
 
         <!-- Duplicate Alert Chip if any -->
         <div v-if="duplicateCount > 0" class="duplicate-alert-chip" @click="$emit('nav', 'duplicates')">
-          <span class="alert-icon">⚠️</span>
+          <HugeiconsIcon :icon="Alert02Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
           <span>{{ duplicateCount }} Duplicates</span>
         </div>
 
         <!-- User Profile Chip with Default Auth Indicator -->
         <button class="user-profile-chip" @click="showUserModal = true" title="Authentication & Default Password Settings">
-          <span class="user-avatar-sm">👤</span>
+          <HugeiconsIcon :icon="User02Icon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
           <div class="user-chip-text">
             <span class="user-name">{{ authState.user }}</span>
             <span class="user-badge-role">CFO</span>
           </div>
-          <span class="auth-lock-dot" title="Auto-authenticated with default password">✓</span>
+          <HugeiconsIcon :icon="CheckmarkCircle01Icon" :size="13" :stroke-width="2.2" color="#FFFFFF" />
         </button>
 
         <!-- Reset Button -->
-        <button class="btn btn-secondary btn-sm" @click="$emit('reset-demo')" title="Reset database to the 37 original sample invoices">
-          <span>🔄 Reset Demo</span>
+        <button class="btn btn-secondary btn-sm" @click="$emit('reset-demo')" title="Reset database to demo data">
+          <HugeiconsIcon :icon="RefreshIcon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+          <span class="reset-text">Reset</span>
         </button>
       </div>
     </div>
@@ -69,7 +69,9 @@
       <div class="auth-modal glass-panel">
         <div class="modal-header">
           <div class="header-left">
-            <span class="auth-icon">🔐</span>
+            <div class="modal-icon-wrap">
+              <HugeiconsIcon :icon="SecurityCheckIcon" :size="20" :stroke-width="1.8" color="#FFFFFF" />
+            </div>
             <div>
               <h3>Authentication & Access Control</h3>
               <p class="text-dim text-xs">Default credentials are permanently configured for zero-friction access.</p>
@@ -100,13 +102,14 @@
             </div>
             <div class="cred-row">
               <span class="cred-label">Role & Privileges:</span>
-              <span class="badge badge-clean">Full Access (CFO)</span>
+              <span class="badge">Full Access (CFO)</span>
             </div>
           </div>
 
           <div class="auth-actions">
             <button class="btn btn-primary w-full" @click="handleAutoLogin">
-              ✓ Log in as Default Admin (Instant)
+              <HugeiconsIcon :icon="CheckmarkCircle01Icon" :size="16" :stroke-width="2" color="#000000" />
+              <span>Log in as Default Admin (Instant)</span>
             </button>
           </div>
         </div>
@@ -117,6 +120,16 @@
 
 <script setup>
 import { ref } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Invoice01Icon,
+  User02Icon,
+  Alert02Icon,
+  RefreshIcon,
+  SecurityCheckIcon,
+  CheckmarkCircle01Icon,
+  CpuIcon
+} from '@hugeicons/core-free-icons';
 import { authState, loginWithDefault } from '../services/auth.js';
 
 const showUserModal = ref(false);
@@ -126,7 +139,7 @@ function handleAutoLogin() {
   showUserModal.value = false;
 }
 
-const props = defineProps({
+defineProps({
   activeModel: {
     type: String,
     default: 'openai/gpt-oss-120b'
@@ -153,11 +166,9 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8, 12, 21, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: #000000;
   border-bottom: 1px solid var(--border-subtle);
-  padding: 14px 24px;
+  padding: 12px 24px;
 }
 
 .header-container {
@@ -166,38 +177,26 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
   flex-wrap: wrap;
 }
 
 .brand-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
+  cursor: pointer;
 }
 
 .brand-logo {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(20, 184, 166, 0.2));
-  border: 1px solid rgba(14, 165, 233, 0.35);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  background: #141414;
+  border: 1px solid var(--border-bright);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.logo-icon {
-  font-size: 1.5rem;
-  z-index: 2;
-}
-
-.logo-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.4) 0%, transparent 70%);
 }
 
 .title-row {
@@ -207,57 +206,49 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
 }
 
 .brand-title {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: #FFFFFF;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #38BDF8 0%, #10B981 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
 .brand-badge {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 7px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #94A3B8;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #171717;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .brand-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
-  font-weight: 500;
 }
 
 .model-selector-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid var(--border-bright);
-  padding: 6px 14px;
+  gap: 8px;
+  background: #0F0F0F;
+  border: 1px solid var(--border-subtle);
+  padding: 5px 12px;
   border-radius: var(--radius-full);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .model-label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .groq-tag {
   font-size: 0.75rem;
-  font-weight: 700;
-  color: #F97316;
+  font-weight: 600;
+  color: #FFFFFF;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -265,250 +256,201 @@ defineEmits(['update:activeModel', 'reset-demo', 'nav']);
 .model-select {
   background: transparent;
   border: none;
-  color: #F8FAFC;
+  color: #E4E4E7;
   font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   outline: none;
 }
 
 .model-select option {
-  background: #0F172A;
+  background: #000000;
   color: #FFFFFF;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .status-chip {
   display: flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  padding: 5px 12px;
+  gap: 6px;
+  background: #121212;
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
   border-radius: var(--radius-full);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #34D399;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
 .chip-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: #10B981;
+  background: #FFFFFF;
 }
 
 .duplicate-alert-chip {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(244, 63, 94, 0.12);
-  border: 1px solid rgba(244, 63, 94, 0.35);
-  padding: 5px 12px;
+  background: #18181B;
+  border: 1px solid var(--border-bright);
+  padding: 4px 10px;
   border-radius: var(--radius-full);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #FB7185;
+  color: #FFFFFF;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.duplicate-alert-chip:hover {
-  background: rgba(244, 63, 94, 0.22);
-  transform: translateY(-1px);
-}
-
-.btn-sm {
-  padding: 6px 14px;
-  font-size: 0.8rem;
 }
 
 .user-profile-chip {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  padding: 4px 12px;
+  background: #141414;
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .user-profile-chip:hover {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: rgba(56, 189, 248, 0.6);
-  transform: translateY(-1px);
-}
-
-.user-avatar-sm {
-  font-size: 1rem;
+  background: #1F1F1F;
+  border-color: var(--border-bright);
 }
 
 .user-chip-text {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .user-name {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #F8FAFC;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FFFFFF;
 }
 
 .user-badge-role {
-  background: rgba(56, 189, 248, 0.2);
-  color: #38BDF8;
+  background: #27272A;
+  color: #E4E4E7;
   font-size: 0.65rem;
-  font-weight: 800;
-  padding: 1px 6px;
-  border-radius: 4px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
 }
 
-.auth-lock-dot {
-  color: #10B981;
-  font-weight: 800;
-  font-size: 0.75rem;
-}
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-
+/* Modal */
 .auth-modal {
+  max-width: 500px;
   width: 100%;
-  max-width: 480px;
-  background: #0F172A;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .modal-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  align-items: flex-start;
 }
 
-.header-left {
+.modal-header .header-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.modal-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  background: #171717;
+  border: 1px solid var(--border-bright);
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.auth-icon {
-  font-size: 1.8rem;
-}
-
-.modal-header h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin: 0;
+  justify-content: center;
 }
 
 .modal-close-btn {
   background: transparent;
   border: none;
-  color: #94A3B8;
-  font-size: 1.2rem;
+  color: var(--text-dim);
+  font-size: 1.1rem;
   cursor: pointer;
-  padding: 4px;
 }
 
-.modal-close-btn:hover {
-  color: #FFFFFF;
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .auth-status-card {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.25);
-  border-radius: 10px;
+  background: #141414;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
   padding: 14px;
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .status-indicator {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 6px;
+  font-size: 0.85rem;
 }
 
 .status-pulse {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #10B981;
-  box-shadow: 0 0 8px #10B981;
-}
-
-.status-title {
-  font-size: 0.9rem;
-  color: #F8FAFC;
+  background: #FFFFFF;
 }
 
 .status-desc {
   font-size: 0.8rem;
-  color: #94A3B8;
-  margin: 0;
+  color: var(--text-dim);
   line-height: 1.4;
 }
 
 .creds-box {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background: #0F0F0F;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 14px;
 }
 
 .cred-row {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  font-size: 0.85rem;
+  align-items: center;
+  font-size: 0.825rem;
 }
 
 .cred-label {
-  color: #94A3B8;
-  font-weight: 500;
+  color: var(--text-dim);
 }
 
-.auth-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-@media (max-width: 900px) {
-  .brand-subtitle {
-    display: none;
+@media (max-width: 768px) {
+  .app-header {
+    padding: 10px 14px;
   }
-  .model-selector-pill {
-    order: 3;
-    width: 100%;
-    justify-content: center;
+  .brand-subtitle, .model-selector-pill, .status-chip, .reset-text {
+    display: none;
   }
 }
 </style>

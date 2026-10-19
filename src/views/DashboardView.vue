@@ -6,11 +6,13 @@
       <div class="kpi-card glass-panel">
         <div class="kpi-header">
           <span class="kpi-title">Total Spend (INR eq.)</span>
-          <span class="kpi-icon">💰</span>
+          <div class="kpi-icon-wrap">
+            <HugeiconsIcon :icon="Coins01Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+          </div>
         </div>
         <div class="kpi-value money-val">{{ formatInr(analytics?.totalInr || 0) }}</div>
         <div class="kpi-footer">
-          <span class="text-emerald">● Live Ledger</span>
+          <span class="text-white">● Live Ledger</span>
           <span class="text-dim">Includes FX conversion</span>
         </div>
       </div>
@@ -19,12 +21,14 @@
       <div class="kpi-card glass-panel">
         <div class="kpi-header">
           <span class="kpi-title">Total Invoices</span>
-          <span class="kpi-icon">🧾</span>
+          <div class="kpi-icon-wrap">
+            <HugeiconsIcon :icon="Invoice01Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+          </div>
         </div>
         <div class="kpi-value">{{ analytics?.count || 0 }}</div>
         <div class="kpi-footer">
-          <span class="badge badge-clean">100% Processed</span>
-          <span class="text-dim">Across 11 vendors</span>
+          <span class="badge">100% Processed</span>
+          <span class="text-dim">Across 11 suppliers</span>
         </div>
       </div>
 
@@ -32,9 +36,11 @@
       <div class="kpi-card glass-panel" :class="{ 'card-alert': (analytics?.flagged || 0) > 0 }">
         <div class="kpi-header">
           <span class="kpi-title">Duplicate Risk Flagged</span>
-          <span class="kpi-icon">⚠️</span>
+          <div class="kpi-icon-wrap">
+            <HugeiconsIcon :icon="Alert02Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+          </div>
         </div>
-        <div class="kpi-value text-rose">{{ analytics?.flagged || 0 }}</div>
+        <div class="kpi-value">{{ analytics?.flagged || 0 }}</div>
         <div class="kpi-footer">
           <button class="kpi-link" @click="$emit('nav', 'duplicates')">
             Review in Auditor →
@@ -46,7 +52,9 @@
       <div class="kpi-card glass-panel">
         <div class="kpi-header">
           <span class="kpi-title">Average Value</span>
-          <span class="kpi-icon">📊</span>
+          <div class="kpi-icon-wrap">
+            <HugeiconsIcon :icon="DashboardSquare01Icon" :size="18" :stroke-width="1.8" color="#FFFFFF" />
+          </div>
         </div>
         <div class="kpi-value money-val">{{ formatInr(analytics?.avgSpend || 0) }}</div>
         <div class="kpi-footer">
@@ -65,7 +73,8 @@
             <p class="panel-desc">Aggregated across canonical supplier entities</p>
           </div>
           <button class="btn btn-secondary btn-xs" @click="$emit('ask-query', 'What are our top 5 vendors by spend in INR?')">
-            ✨ Ask Groq
+            <HugeiconsIcon :icon="AiChat02Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+            <span>Ask Groq</span>
           </button>
         </div>
 
@@ -93,7 +102,8 @@
             <p class="panel-desc">Spending breakdown over time (YYYY-MM)</p>
           </div>
           <button class="btn btn-secondary btn-xs" @click="$emit('ask-query', 'Show monthly spending trend for all invoices')">
-            ✨ Ask Groq
+            <HugeiconsIcon :icon="AiChat02Icon" :size="14" :stroke-width="1.8" color="#FFFFFF" />
+            <span>Ask Groq</span>
           </button>
         </div>
 
@@ -140,15 +150,15 @@
             </thead>
             <tbody>
               <tr v-for="inv in recentInvoices" :key="inv.id" class="clickable-row" @click="$emit('view-invoice', inv.id)">
-                <td class="font-semibold">{{ inv.vendor_name }}</td>
+                <td class="font-semibold text-white">{{ inv.vendor_name }}</td>
                 <td><span class="code-tag">{{ inv.invoice_number }}</span></td>
                 <td class="text-dim">{{ inv.invoice_date }}</td>
                 <td>
-                  <span class="badge" :class="getStatusBadgeClass(inv.status)">
+                  <span class="badge">
                     {{ inv.status }}
                   </span>
                 </td>
-                <td class="text-right money-val font-semibold">
+                <td class="text-right money-val font-semibold text-white">
                   {{ inv.currency === 'INR' ? '₹' : '£' }}{{ Number(inv.total).toLocaleString('en-IN', { minimumFractionDigits: 2 }) }}
                 </td>
               </tr>
@@ -161,7 +171,7 @@
       <div class="groq-prompts-panel glass-panel">
         <div class="panel-header">
           <div>
-            <h3 class="panel-title">✨ Groq AI Quick Questions</h3>
+            <h3 class="panel-title">Groq AI Financial Queries</h3>
             <p class="panel-desc">Test natural language SQL reasoning</p>
           </div>
         </div>
@@ -173,14 +183,14 @@
             class="prompt-chip"
             @click="$emit('ask-query', p.text)"
           >
-            <span class="prompt-icon">{{ p.icon }}</span>
+            <HugeiconsIcon :icon="p.icon" :size="16" :stroke-width="1.8" color="#FFFFFF" />
             <span class="prompt-text">{{ p.text }}</span>
           </button>
         </div>
 
         <div class="groq-perf-banner">
           <span class="pulse-dot"></span>
-          <span>Groq LPU Inference active · ~500–1000 tokens/second</span>
+          <span>Groq LPU Inference active · ~500–1000 tokens/sec throughput</span>
         </div>
       </div>
     </div>
@@ -189,6 +199,17 @@
 
 <script setup>
 import { computed } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import {
+  Coins01Icon,
+  Invoice01Icon,
+  Alert02Icon,
+  DashboardSquare01Icon,
+  AiChat02Icon,
+  Search01Icon,
+  Calendar01Icon,
+  FilterIcon
+} from '@hugeicons/core-free-icons';
 
 const props = defineProps({
   analytics: {
@@ -241,19 +262,12 @@ function formatMonth(ym) {
   return `${months[mIdx]} '${parts[0].slice(2)}`;
 }
 
-function getStatusBadgeClass(status) {
-  if (status === 'Clean') return 'badge-clean';
-  if (status === 'Likely duplicate') return 'badge-likely';
-  if (status === 'Possible duplicate') return 'badge-possible';
-  return 'badge-open';
-}
-
 const samplePrompts = [
-  { icon: '🔍', text: 'How much did we spend with Infosphere this quarter?' },
-  { icon: '⚠️', text: 'Show me all flagged duplicate invoices and reasons' },
-  { icon: '🏆', text: 'What are our top 5 vendors by total expenditure in INR?' },
-  { icon: '💱', text: 'What is the spending breakdown by currency?' },
-  { icon: '📅', text: 'Show monthly spending trend in 2026' }
+  { icon: Search01Icon, text: 'How much did we spend with Infosphere this quarter?' },
+  { icon: Alert02Icon, text: 'Show me all flagged duplicate invoices and reasons' },
+  { icon: Coins01Icon, text: 'What are our top 5 vendors by total expenditure in INR?' },
+  { icon: FilterIcon, text: 'What is the spending breakdown by currency?' },
+  { icon: Calendar01Icon, text: 'Show monthly spending trend in 2026' }
 ];
 </script>
 
@@ -261,25 +275,25 @@ const samplePrompts = [
 .dashboard-view {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
 .kpi-card {
-  padding: 22px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .card-alert {
-  border-color: rgba(244, 63, 94, 0.4);
-  background: rgba(244, 63, 94, 0.05);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: #141414;
 }
 
 .kpi-header {
@@ -289,18 +303,25 @@ const samplePrompts = [
 }
 
 .kpi-title {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.825rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
-.kpi-icon {
-  font-size: 1.3rem;
+.kpi-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-xs);
+  background: #141414;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .kpi-value {
-  font-size: 1.85rem;
-  font-weight: 800;
+  font-size: 1.75rem;
+  font-weight: 700;
   color: #FFFFFF;
   letter-spacing: -0.02em;
 }
@@ -309,23 +330,21 @@ const samplePrompts = [
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   margin-top: 4px;
 }
 
 .kpi-link {
   background: transparent;
   border: none;
-  color: #FB7185;
-  font-weight: 600;
-  font-size: 0.8rem;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 0.78rem;
   cursor: pointer;
   padding: 0;
-  transition: transform 0.2s;
 }
 .kpi-link:hover {
   text-decoration: underline;
-  transform: translateX(2px);
 }
 
 .charts-grid {
@@ -335,10 +354,10 @@ const samplePrompts = [
 }
 
 .chart-panel {
-  padding: 24px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .panel-header {
@@ -349,8 +368,8 @@ const samplePrompts = [
 }
 
 .panel-title {
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 0.95rem;
+  font-weight: 600;
   color: #FFFFFF;
 }
 
@@ -367,7 +386,7 @@ const samplePrompts = [
 .vendor-bars {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .vendor-bar-row {
@@ -380,40 +399,40 @@ const samplePrompts = [
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
 }
 
 .vendor-name {
-  font-weight: 600;
+  font-weight: 500;
   color: #E2E8F0;
 }
 
 .vendor-spend {
-  color: #38BDF8;
-  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
 }
 
 .bar-track {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  height: 6px;
+  background: #18181B;
+  border-radius: 9999px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, #0EA5E9, #10B981);
-  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px;
+  background: #FFFFFF;
+  transition: width 0.4s ease;
 }
 
 .monthly-bars {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  height: 200px;
-  padding-top: 20px;
-  gap: 10px;
+  height: 190px;
+  padding-top: 16px;
+  gap: 8px;
 }
 
 .month-col {
@@ -422,7 +441,7 @@ const samplePrompts = [
   flex-direction: column;
   align-items: center;
   height: 100%;
-  gap: 8px;
+  gap: 6px;
 }
 
 .month-bar-wrapper {
@@ -435,26 +454,26 @@ const samplePrompts = [
 
 .month-bar {
   width: 70%;
-  max-width: 32px;
-  background: linear-gradient(180deg, #38BDF8 0%, rgba(14, 165, 233, 0.3) 100%);
-  border-radius: 6px 6px 0 0;
-  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 28px;
+  background: #27272A;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease, background 0.15s ease;
   cursor: pointer;
 }
 
 .month-bar:hover {
-  background: linear-gradient(180deg, #0284C7 0%, #10B981 100%);
+  background: #FFFFFF;
 }
 
 .month-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .month-val {
-  font-size: 0.7rem;
-  color: #94A3B8;
+  font-size: 0.65rem;
+  color: var(--text-muted);
 }
 
 .bottom-grid {
@@ -464,7 +483,7 @@ const samplePrompts = [
 }
 
 .recent-panel, .groq-prompts-panel {
-  padding: 24px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -477,21 +496,21 @@ const samplePrompts = [
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
 }
 
 .data-table th {
   text-align: left;
-  padding: 10px 12px;
+  padding: 8px 10px;
   color: var(--text-dim);
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .data-table td {
-  padding: 12px;
+  padding: 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -503,53 +522,44 @@ const samplePrompts = [
   background: rgba(255, 255, 255, 0.03);
 }
 
-.text-right {
-  text-align: right;
-}
-.font-semibold {
-  font-weight: 600;
-}
-
 .prompt-chips {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .prompt-chip {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.03);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: #141414;
   border: 1px solid var(--border-subtle);
   color: #E2E8F0;
   text-align: left;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .prompt-chip:hover {
-  background: rgba(14, 165, 233, 0.1);
-  border-color: rgba(14, 165, 233, 0.3);
-  transform: translateX(3px);
-  color: #38BDF8;
+  background: #1F1F1F;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
 }
 
 .groq-perf-banner {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  background: rgba(249, 115, 22, 0.08);
-  border: 1px solid rgba(249, 115, 22, 0.25);
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: #121212;
+  border: 1px solid var(--border-subtle);
   font-size: 0.75rem;
-  color: #FB923C;
-  font-weight: 600;
+  color: var(--text-muted);
 }
 
 @media (max-width: 1000px) {

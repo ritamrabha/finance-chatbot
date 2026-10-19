@@ -4,7 +4,7 @@
     <div class="studio-header glass-panel">
       <div class="header-left">
         <div class="studio-logo">
-          <span>⚡</span>
+          <HugeiconsIcon :icon="CpuIcon" :size="20" :stroke-width="1.8" color="#FFFFFF" />
         </div>
         <div>
           <h2 class="studio-title">Groq Cloud AI Model Studio</h2>
@@ -25,7 +25,7 @@
     <div class="key-box glass-panel">
       <div class="key-header">
         <h3 class="box-title">GroqCloud API Key Configuration</h3>
-        <span class="badge badge-clean">Active from .env</span>
+        <span class="badge">Active</span>
       </div>
       <p class="box-desc">
         Your key is loaded from <span class="code-tag">.env</span> (<code>groq_api_key</code> / <code>VITE_GROQ_API_KEY</code>). You can also provide a custom key below:
@@ -50,7 +50,7 @@
       </div>
 
       <div v-if="testResult" class="test-result-box" :class="testResult.success ? 'test-success' : 'test-fail'">
-        <span>{{ testResult.success ? '✓ ' + testResult.message : '✕ ' + testResult.message }}</span>
+        <span>{{ testResult.message }}</span>
       </div>
     </div>
 
@@ -71,7 +71,7 @@
           <div class="card-top">
             <div class="model-meta">
               <span class="model-id code-tag">{{ model.id }}</span>
-              <span class="badge" :class="model.id.includes('120b') ? 'badge-clean' : 'badge-currency'">
+              <span class="badge">
                 {{ model.badge }}
               </span>
             </div>
@@ -83,7 +83,7 @@
           <div class="specs-grid">
             <div class="spec-item">
               <span class="spec-label">Speed:</span>
-              <span class="spec-val money-val text-cyan">{{ model.speed }}</span>
+              <span class="spec-val money-val text-white">{{ model.speed }}</span>
             </div>
             <div class="spec-item">
               <span class="spec-label">Context:</span>
@@ -93,10 +93,11 @@
 
           <button
             class="btn btn-sm w-full"
-            :class="activeModel === model.id ? 'btn-emerald' : 'btn-secondary'"
+            :class="activeModel === model.id ? 'btn-primary' : 'btn-secondary'"
             @click="$emit('update:activeModel', model.id)"
           >
-            {{ activeModel === model.id ? '✓ Currently Active' : 'Activate Model' }}
+            <HugeiconsIcon v-if="activeModel === model.id" :icon="CheckmarkCircle01Icon" :size="15" :stroke-width="2" color="#000000" />
+            <span>{{ activeModel === model.id ? 'Currently Active' : 'Activate Model' }}</span>
           </button>
         </div>
       </div>
@@ -106,7 +107,7 @@
     <div class="playground-box glass-panel">
       <div class="panel-header">
         <div>
-          <h3 class="panel-title">⚡ Live Inference Benchmark</h3>
+          <h3 class="panel-title">Live Inference Benchmark</h3>
           <p class="panel-desc">Test raw completion speed with the currently selected Groq model</p>
         </div>
       </div>
@@ -119,16 +120,16 @@
           class="bench-input"
         />
         <button class="btn btn-primary" :disabled="benchmarking || !benchmarkPrompt" @click="runBenchmark">
-          {{ benchmarking ? 'Inferring...' : 'Run Benchmark →' }}
+          {{ benchmarking ? 'Inferring...' : 'Run Benchmark' }}
         </button>
       </div>
 
       <div v-if="benchmarkOutput" class="benchmark-results">
         <div class="benchmark-stats">
           <span class="stat-pill">Model: <strong>{{ activeModel }}</strong></span>
-          <span class="stat-pill">Latency: <strong class="text-cyan">{{ benchStats.timeMs }}ms</strong></span>
+          <span class="stat-pill">Latency: <strong class="text-white">{{ benchStats.timeMs }}ms</strong></span>
           <span class="stat-pill">Tokens: <strong>{{ benchStats.tokens }}</strong></span>
-          <span class="stat-pill">Rate: <strong class="text-emerald">{{ benchStats.tps }} tokens/sec</strong></span>
+          <span class="stat-pill">Rate: <strong class="text-white">{{ benchStats.tps }} tokens/sec</strong></span>
         </div>
         <div class="benchmark-text">
           {{ benchmarkOutput }}
@@ -140,6 +141,8 @@
 
 <script setup>
 import { ref } from 'vue';
+import { HugeiconsIcon } from '@hugeicons/vue';
+import { CpuIcon, CheckmarkCircle01Icon } from '@hugeicons/core-free-icons';
 import { GROQ_MODELS, getGroqApiKey, setGroqApiKey } from '../services/groq.js';
 
 const props = defineProps({

@@ -1,5 +1,5 @@
 <template>
-  <nav class="app-navbar">
+  <nav class="app-navbar" aria-label="Main Navigation">
     <div class="nav-container">
       <div class="nav-tabs">
         <button
@@ -13,8 +13,8 @@
           <div class="icon-wrapper">
             <HugeiconsIcon
               :icon="tab.icon"
-              :size="22"
-              :stroke-width="1.75"
+              :size="19"
+              :stroke-width="1.8"
               color="currentColor"
             />
           </div>
@@ -24,7 +24,6 @@
           <span v-if="tab.badge" class="nav-badge" :class="tab.badgeClass">
             {{ tab.badge }}
           </span>
-          <span v-if="tab.isNew" class="sparkle-dot" title="Powered by Groq">✨</span>
         </button>
       </div>
     </div>
@@ -35,13 +34,14 @@
 import { computed } from 'vue';
 import { HugeiconsIcon } from '@hugeicons/vue';
 import {
-  DashboardSquare01Icon,
-  Invoice01Icon,
+  Home01Icon,
+  Calculator01Icon,
   AiChat02Icon,
+  Invoice01Icon,
   AddInvoiceIcon,
   FileSearchIcon,
-  CpuIcon,
-  BankIcon
+  User02Icon,
+  CpuIcon
 } from '@hugeicons/core-free-icons';
 
 const props = defineProps({
@@ -64,21 +64,25 @@ defineEmits(['select-tab']);
 const navTabs = computed(() => [
   {
     id: 'dashboard',
-    name: 'Dashboard',
-    icon: DashboardSquare01Icon
+    name: 'Home',
+    icon: Home01Icon
   },
   {
-    id: 'invoices',
-    name: 'Invoices & Review',
-    icon: Invoice01Icon,
-    badge: props.invoicesCount ? String(props.invoicesCount) : null,
-    badgeClass: 'badge-count'
+    id: 'calculator',
+    name: 'Loan Calculator',
+    icon: Calculator01Icon
   },
   {
     id: 'chat',
-    name: 'Groq AI Assistant',
-    icon: AiChat02Icon,
-    isNew: true
+    name: 'AI Chat Assistant',
+    icon: AiChat02Icon
+  },
+  {
+    id: 'invoices',
+    name: 'Invoices',
+    icon: Invoice01Icon,
+    badge: props.invoicesCount ? String(props.invoicesCount) : null,
+    badgeClass: 'badge-count'
   },
   {
     id: 'upload',
@@ -87,21 +91,19 @@ const navTabs = computed(() => [
   },
   {
     id: 'duplicates',
-    name: 'Duplicate Auditor',
+    name: 'Duplicates',
     icon: FileSearchIcon,
     badge: props.duplicateCount > 0 ? String(props.duplicateCount) : null,
     badgeClass: 'badge-alert'
   },
   {
-    id: 'kyc-vault',
-    name: 'KYC & CIBIL Vault',
-    icon: BankIcon,
-    badge: 'Azure SQL',
-    badgeClass: 'badge-clean'
+    id: 'profile',
+    name: 'Profile & Vault',
+    icon: User02Icon
   },
   {
     id: 'groq-studio',
-    name: 'Groq Cloud Studio',
+    name: 'Groq Studio',
     icon: CpuIcon
   }
 ]);
@@ -109,11 +111,9 @@ const navTabs = computed(() => [
 
 <style scoped>
 .app-navbar {
-  background: rgba(11, 17, 32, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #0A0A0A;
   border-bottom: 1px solid var(--border-subtle);
-  padding: 8px 24px;
+  padding: 6px 24px;
 }
 
 .nav-container {
@@ -129,53 +129,42 @@ const navTabs = computed(() => [
 .nav-tabs {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  border-radius: var(--radius-md);
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
   background: transparent;
   border: 1px solid transparent;
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-family: var(--font-sans);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease;
   white-space: nowrap;
-  position: relative;
 }
 
 .nav-item:hover {
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: #141414;
 }
 
 .nav-item.active {
-  color: #38BDF8;
-  background: rgba(14, 165, 233, 0.12);
-  border-color: rgba(14, 165, 233, 0.35);
-  box-shadow: 0 2px 14px rgba(14, 165, 233, 0.2);
+  color: #FFFFFF;
+  background: #1C1C1C;
+  border-color: rgba(255, 255, 255, 0.18);
+  font-weight: 600;
 }
 
 .icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
-}
-
-.nav-item:hover .icon-wrapper {
-  transform: translateY(-1px);
-}
-
-.nav-item.active .icon-wrapper {
-  color: #38BDF8;
 }
 
 .tab-label {
@@ -184,34 +173,27 @@ const navTabs = computed(() => [
 
 .nav-badge {
   font-size: 0.7rem;
-  font-weight: 700;
-  padding: 2px 7px;
+  font-weight: 600;
+  padding: 1px 6px;
   border-radius: var(--radius-full);
 }
 
 .badge-count {
-  background: rgba(255, 255, 255, 0.08);
-  color: #CBD5E1;
+  background: #1A1A1A;
+  color: #A1A1AA;
+  border: 1px solid var(--border-subtle);
 }
 
 .badge-alert {
-  background: rgba(244, 63, 94, 0.2);
-  color: #FDA4AF;
-  border: 1px solid rgba(244, 63, 94, 0.4);
-}
-
-.sparkle-dot {
-  font-size: 0.85rem;
-  animation: pulseGlow 2.5s infinite;
+  background: #1F1F1F;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 @media (max-width: 768px) {
+  /* On mobile screens, main top navbar is hidden or condensed because the floating dock is used */
   .app-navbar {
-    padding: 6px 12px;
-  }
-  .nav-item {
-    padding: 8px 12px;
-    font-size: 0.85rem;
+    display: none;
   }
 }
 </style>
